@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
         Enemy::create(['name' => 'Putin', 'strength'=>'9999', 'icon_path'=>'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\putin.png']);
         Enemy::create(['name' => 'Snek', 'strength'=>'1', 'icon_path'=>'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\snek.jpg']);
 
+        Guild::create(['name' => 'GaySquad', 'owner'=>'2', 'memebers_amount'=>'3', 'icon_path'=>'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\pidr.png','description'=>'gays','isopen'=>'true']);
+        Guild::create(['name' => 'Loyalists', 'owner'=>'5', 'memebers_amount'=>'2', 'icon_path'=>'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\putin.png','description'=>'loyal very','isopen'=>'true']);
+        Guild::create(['name' => 'lol', 'owner'=>'8', 'memebers_amount'=>'5', 'icon_path'=>'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\snek.jpg','description'=>'lolers', 'isopen'=>'false']);
+
          \App\Models\User::factory(10)->create();
          \App\Models\Character::factory(10)->create();
          \App\Models\Encounter::factory(20)->create();
