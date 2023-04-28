@@ -23,4 +23,5 @@ Route::redirect('/', 'users');
 Route::resource('users', UserController::class);
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
 Route::get('{id}/guild', [GuildController::class,'index']);
+Route::get('guilds/create', [GuildController::class,'create']);
 

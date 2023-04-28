@@ -23,7 +23,7 @@ class GuildController extends Controller
      */
     public function create()
     {
-        //
+        return view('guild_new');
     }
 
     /**
@@ -31,7 +31,10 @@ class GuildController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $guild = new Guild();
+        $guild->name = $request->guild_name;
+        $guild->save();
+        return redirect('4/guild');
     }
 
     /**
