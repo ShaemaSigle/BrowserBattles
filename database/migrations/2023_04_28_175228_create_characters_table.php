@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('strength');
             $table->string('level');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('guild')->nullable();
+            $table->foreignId('guild_id')->nullable();
             $table->string('duelsWon');
             $table->timestamps();
         });

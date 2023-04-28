@@ -22,6 +22,7 @@ class CharacterFactory extends Factory
         return [
             'name' => fake()->name(),
             'user_id'=> rand(1, 10),
+            'guild_id'=> rand(1, 3),
             'level' => rand(0, 100),
             'strength' => rand(0, 10000),
             'duelsWon' =>rand(0, 20),
