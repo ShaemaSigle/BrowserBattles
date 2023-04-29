@@ -11,11 +11,10 @@ class GuildController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
+    public function index()
     {
-        $guild = Guild::where('id', '=', $id)->first();
-        $characters = Character::where('guild_id', '=', $id)->get();
-        return view('guild', ['guild' => $guild, 'characters' => $characters]);
+        $guilds = Guild::all();
+        return view('guilds', compact('guilds'));
     }
 
     /**
@@ -33,6 +32,11 @@ class GuildController extends Controller
     {
         $guild = new Guild();
         $guild->name = $request->guild_name;
+        $guild->owner = $request->guild_owner;
+        $guild->members_amount=1;
+        $guild->icon_path = 'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\snek.jpg';
+        $guild->description = '';
+        $guild->isopen ='false';
         $guild->save();
         return redirect('4/guild');
     }
@@ -40,9 +44,11 @@ class GuildController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $guild = Guild::where('id', '=', $id)->first();
+        $characters = Character::where('guild_id', '=', $id)->get();
+        return view('guild', ['guild' => $guild, 'characters' => $characters]);
     }
 
     /**

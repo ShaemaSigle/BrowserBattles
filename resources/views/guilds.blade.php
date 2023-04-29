@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>Users</title>
+ <title>All guilds</title>
 </head>
 <body>
- <h1>Список пидоров:</h1>
- @if (count($users) == 0)
+ <h1>All of the guilds:</h1>
+ @if (count($guilds) == 0)
  <p class='error'>There are no records in the database!</p>
  @else
  <ul>
- @foreach ($users as $user)
+ @foreach ($guilds as $guild)
  <li>
- {{ $user->username }} - {{ $user->role }}
+ {{ $guild->name }} - {{ $guild->members_amount }}
  </li>
  @endforeach
  </ul>
