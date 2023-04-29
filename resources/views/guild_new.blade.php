@@ -3,8 +3,13 @@
 <head>
  <meta charset="UTF-8">
  <title>New guild</title>
+ <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
+    <link href="{!! url('assets/css/signin.css') !!}" rel="stylesheet">
 </head>
 <body>
+
+@include('layouts.partials.navbar')
+
 @auth
     <?php $user = Auth::user(); ?>
         <h1>You are about to create a new guild. {{ $user->username }} will be the owner. </h1>

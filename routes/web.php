@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuildController;
+use App\Http\Controllers\GameController;
 
 
 /*
@@ -20,6 +21,7 @@ Route::redirect('/', 'users');
 Route::resource('users', UserController::class);
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
 Route::get('guilds', [GuildController::class,'index']);
+Route::get('game', [GameController::class, 'index']);
 Route::get('{id}/guild', [GuildController::class,'show']);
 Route::get('guilds/create', [GuildController::class,'create']);
 

@@ -6,9 +6,9 @@
       </a>
 
       <ul class="nav col-lg-auto mb-2 mr-10 justify-content-center mb-md-0">
-        <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+        <li><a href="{{action([App\Http\Controllers\HomeController::class, 'index'])}}" class="nav-link px-2 text-secondary">Home</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Profile</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Game</a></li>
+        <li><a href="{{action([App\Http\Controllers\GameController::class, 'index'])}}" class="nav-link px-2 text-white">Game</a></li>
         <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">Guild</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Leaderboards</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Suggest</a></li>
