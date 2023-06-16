@@ -1,45 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Homepage</title>
-    <link href="{{ url('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
-    <script>
-window.addEventListener('scroll', function() {
-  var distanceScrolled = window.pageYOffset || document.documentElement.scrollTop;
-  var banner = document.querySelector('.banner');
-  banner.style.filter = 'blur(' + distanceScrolled / 60 + 'px)';
-});
-
-</script>
+    <title>Fluffy and proud</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="dogsJS.js"></script> 
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="dogs.css">
 </head>
+
 <body>
-
-
-<h1 align="center">Welcome to Browser Battles!</h1>
     <div id="page-container">
-        <div class="banner" style="background-image: url('{{ asset('assets/img/banner.jpg')}}');"> 
+        <div class="banner"> 
+            <img src="images/flowers.gif" width="80" height="85" class="flowersR" alt="floating flowers">
+            <img src="images/flowers.gif" width="80" height="85" class="flowersL" alt="floating flowers">
+            <img src="images/flowers.gif" width="80" height="85" class="flowersR" alt="floating flowers">
+            <img src="images/flowers.gif" width="80" height="85" class="flowersL" alt="floating flowers">
+            <img src="images/flowers.gif" width="80" height="85" class="flowersR" alt="floating flowers">
+            <img src="images/flowers.gif" width="80" height="85" class="flowersL" alt="floating flowers">
             <div class="banner-quote" >
                 <figure>
                 <blockquote class="blockquote">
-                    <p>There will be a game soon.</p>
+                    <p>Dogs are our link to paradise. They don’t know evil or jealousy or discontent. To sit with a dog on a hillside on a glorious afternoon is to be back in Eden, where doing nothing was not boring — it was peace.</p>
                 </blockquote>
                 <figcaption class="blockquote-footer">
-                    Me, <cite title="Source Title">My Words</cite>
+                    Milan Kundera, <cite title="Source Title">The Unbearable Lightness of Being</cite>
                 </figcaption>
                 </figure>
             </div>
         </div>  
     </div>
-    @include('layouts.partials.navbar')
-
+    <nav class="navbar">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a href="#You">You</a></li>
+            <li class="nav-item"><a href="#Him">Him</a></li>
+            <li class="nav-item"><a href="#YouAndHim">You And Him</a></li>
+            <li class="nav-item"><a href="#advantages">Advantages of having a dog</a></li>
+            <li class="nav-item"><a href="#request">Request</a></li>
+            <li class="nav-item"><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Get rickrolled</a></li>
+        </ul>
+    </nav>
 
 <section class="content">
     <h1>Anyone can be loved. By dogs.</h1>
 <article class="main-container section">
-
+    <button type="button" class="btn" id="sheltie"></button>
+    <button type="button" class="btn" id="corgi"></button>
+    <button type="button" class="btn" id="basenji"></button>
+    <button type="button" class="btn" id="berner-sennenhund"></button>
+    <button type="button" class="btn" id="spaniel"></button>
+    <button type="button" class="btn" id="shar-pei"></button>
+    <button type="button" class="btn" id="east-european-shepherd"></button>
+    <button type="button" class="btn" id="papillon"></button>
+    <p><i>Click on the dogs, they might tell you useful things about themselves!</i></p>
 <div class="hidden-left"><hr><p class="hidden-text">The <b>Shetland Sheepdog</b> is a small, active, and agile herding dog standing between 13 and 16 inches at the shoulder. The long coat is harsh and straight, with a dense undercoat, and comes in black, blue merle, and sable, with white markings. Shelties (and their owners) enjoy the challenge of coming up with new things to learn, from “helping” around the house to canine gymnastics. They're considered extremely intelligent and respond well if you're patient and also make training time fun. Often, the Sheltie is timid and reserved towards strangers, and it will let its voice be heard on this when need be. Although the tendency to bark a lot is considered by some to be a fault, it is this characteristic that makes the Sheltie an excellent watch dog.</p><hr></div>
 
 
@@ -75,11 +90,34 @@ window.addEventListener('scroll', function() {
 </div>
 <br><br>
 <p>End of the story? Not at all. This story is written by each one of us. We rush forward, trying to keep up with the sunset. However, my dear friend, we are in such a hurry that sometimes we forget about a simple thing: friend. Everyone needs a friend. And we can help you with that. If you do not have a faithful dog who will always stand by your side, then now, in these dark times, is the time to find it. </p>
-
+<h3 id="advantages">Advantages of having a dog</h3>
+<ol type="1">
+    <li>It will protect you and your family</li>
+    <li>It's cute</li>
+    <li>It will force you to go out</li>
+    <li>It will not eat your soul and enslave you forever</li>
+</ol>
+<h3 id="request">Fill out the form below and we will contact you for a consultation in order to select the breed that is ideal for you!</h3>
+<form id="mainForm" action="https://www.w3schools.com/action_page.php" onsubmit="return checkBeforeSubmission();">
+    <label for="e-mail">E-mail:</label> 
+    <input type="text" id="e-mail" name="email">
+    <label for="e-mail-list"></label> 
+    <select id="e-mail-list" name="email-list"></select><br>
+    <label for="amount-of-dogs">How many dogs have you had in your life?</label>      
+    <input type="text" id="amount-of-dogs" name="amount_of_dogs"><br>
+    <input type="submit" value="Submit" id="submit">
+</form>
 <div class = "warnings" id="warning"></div>
 
 </article>
 
+<footer>
+    <ul class="menu-bottom">
+        <li><a href="https://www.youtube.com/watch?v=5rnE7V4D7U4">I am</a></li>
+        <li><a href="https://www.youtube.com/watch?v=wniLsSCTclU">so</a></li>
+        <li><a href="https://www.youtube.com/watch?v=5rnE7V4D7U4">tired :(</a></li>
+    </ul>
+</footer>
 <div id="copyright">Copyright 2023 - All rights reserved</div>
 </section>
 </body>
