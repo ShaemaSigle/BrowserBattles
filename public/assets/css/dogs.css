@@ -6,9 +6,13 @@
     }
 }
 body{
-    line-height: 10px;
     background-color: rgb(244, 196, 196);
 }
+.container {
+    margin: 0;
+    height: 26px;
+}
+
 .content{
     padding-left: 5vw;
     padding-right: 5vw;
@@ -54,7 +58,6 @@ p:not(blockquote p){
     font-size: 13px;
 }
 
-
 .banner{
     height: 80vh;
     width: 201.5vh;
@@ -69,9 +72,7 @@ p:not(blockquote p){
 }
 .btn{
     width: 100px;
-    height: 100px;
-    background: url(images/dogPics.png);
-    border: none;
+    height: 36px;
 }
 
 
@@ -113,28 +114,11 @@ form{
     padding: 5px;
     border-radius: 5px;
 }
-.menu-bottom{
-    padding: 0px 20% 0px 41%;
-    margin-top: -10px;
-}
 footer{
     background-color: darksalmon;
     height: 10px;
 }
-.menu-bottom li + li{
-    border-left: 1px solid black;
-}
-.menu-bottom li{
-    float: left;
-    margin-top: -4px;
-    padding-left: 0px;
-    text-align: center;
-    padding-right: 15px;
-}
-.menu-bottom li a{
-    font-size: 11px;
-    padding-top: 2px;
-}
+
 #copyright{
     text-align: center;
     font-size: 8.5px;

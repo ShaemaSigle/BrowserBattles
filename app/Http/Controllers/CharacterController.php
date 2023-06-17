@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Guild;
 use App\Models\Character;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
-
-class UserController extends Controller
+class GuildController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::all();
-        return view('users', compact('users'));
+        $characters = Character::all();
+        return view('characters', compact('characters'));
     }
 
     /**
@@ -24,7 +22,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('character_new');
     }
 
     /**
@@ -32,16 +30,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $character = new Character();
+        $character->name = $request->character_name;
+        $character->user_id = $request->user_id;
+        $character->level=1;
+        $character->guild_id = NULL;
+        $character->duelsWon = 0;
+        $character->strength =0;
+        $character->save();
+        return redirect('4/guild');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show()
-    {
-        $user = Auth::user();
-        $characters = Character::where('user_id', '=', $user->id)->get();
+    public function show(){
+        $characters = Character::where('user_id', '=', @auth()->user()->id)->first();
         return view('profile', ['characters' => $characters]);
     }
 
@@ -56,14 +60,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, string $id)
     {
-        $user = User::findOrFail(Auth::user()->id);
-        if($request->name != NULL) $user->username = $request->name;
-        if($request->email != NULL) $user->email = $request->email;
-        if($request->password != NULL) $user->password=$request->password;
-        $user->save();
-        return redirect('profile');
+        //
     }
 
     /**

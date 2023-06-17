@@ -5,6 +5,7 @@
  <title>Guild view</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{!! url('assets/css/signin.css') !!}" rel="stylesheet">
+    <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 </head>
 <body>
 
