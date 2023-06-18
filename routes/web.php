@@ -6,6 +6,8 @@ use App\Http\Controllers\GuildController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\CharacterController;
 
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------

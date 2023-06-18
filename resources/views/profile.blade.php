@@ -50,16 +50,15 @@
     color: black;
 }
 .play_as{
-  border: none;
-  border-radius: 4px;
-  width: 100%;
-  cursor: pointer;
+    height: 4vh;
+    padding: 0px 5px 0px 5px;
+    margin-right: 5px;
 }
 .blankit{
     border: none;
     background:none;
-    margin-right: 130vh;
-    margin-top: -4vh;
+    padding: 0;
+    float: left;
     position: relative;
 }
 
@@ -82,13 +81,14 @@
  <h3 style="padding-left: 0;">Your characters:</h3>
  @foreach ($characters as $character)
  <li class="character">
- {{ $character->name }} - {{ $character->level }}  @if($character->id != $user->active_character_id)
+ <div style="margin-top:15px;">{{ $character->name }} - {{ $character->level }} LVL  @if($character->id != $user->active_character_id)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\UserController::class, 'update'], [ 'user' => $user]) }}>
     <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
     @csrf
     @method('put')
-    <button type="submit" class="btn btn-outline-light li-right">Play</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as">Press to play as</button>
  </form>
+</div>
  @endif
 </li>
  @endforeach

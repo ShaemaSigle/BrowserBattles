@@ -14,12 +14,15 @@
 .container {
     height: 0px;
 }
-  li {
-      display: block;
+  .navbar li {
+      
       color: #FFFFFF;
       text-align: center;
-      text-decoration: none;
       transition: background-color 0.3s ease;
+    }
+    li{
+      display: block;
+      text-decoration: none;
     }
 
     .navbar a:hover {
