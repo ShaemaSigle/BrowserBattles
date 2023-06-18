@@ -62,6 +62,7 @@ class UserController extends Controller
         if($request->name != NULL) $user->username = $request->name;
         if($request->email != NULL) $user->email = $request->email;
         if($request->password != NULL) $user->password=$request->password;
+        $user->active_character_id=$request->active_character_id;
         $user->save();
         return redirect('profile');
     }

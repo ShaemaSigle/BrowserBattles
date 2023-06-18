@@ -6,7 +6,7 @@
     }
 }
 body{
-    background-color: rgb(244, 196, 196);
+    background-color: #ffebeb;
 }
 .container {
     margin: 0;
@@ -39,8 +39,6 @@ h1,h2,h3,h4,h5{
 h1{
     text-align: center;
     font-size: 40px;
-
-    background-color: darksalmon;
 }
 h2{
     font-size: 28px;
@@ -76,31 +74,6 @@ p:not(blockquote p){
 }
 
 
-.navbar{
-    font-family: 'Montserrat', sans-serif;
-    position: sticky;
-    float: left;
-    top: 0;
-    background-color: darksalmon; 
-    border-radius: 0 0 2vw 2vw;
-    width: 17vw;
-    height: 21vh;
-    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.23);
-}
-ol {
-    list-style-position: inside;
-}
-ol li{
-    font-size: 90%;
-}
-li a{
-    padding-left: 1.5vw;
-    padding-top: 0.5vw;
-    display: block;
-    color: rgb(0, 0, 0, 0.7);
-    text-decoration: none;
-}
-
 article{
     padding-bottom: 15px; 
 }
@@ -113,10 +86,6 @@ form{
     border: 3px outset rgb(250, 190, 117);
     padding: 5px;
     border-radius: 5px;
-}
-footer{
-    background-color: darksalmon;
-    height: 10px;
 }
 
 #copyright{

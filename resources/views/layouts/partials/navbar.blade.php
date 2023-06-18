@@ -35,7 +35,6 @@
     }
 
     .li-right {
-
       float: right;
       color:white;
     }
@@ -57,6 +56,9 @@
   @auth <?php $user = Auth::user(); ?>
        {{auth()->user()->name}}
        <li style="padding-right: 15px;  padding-top:4px;"><a href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2 li-right">Logout</a></li>
+       @if(auth()->user()->active_character_id != NULL)
+       <li class="li-right" style="padding-right: 8px; padding-top:4px;">playing as {{$user->active_character_id}}</li>
+       @endif
        <li class="li-right" style="padding-right: 8px; padding-top:4px;">You are now logged as {{$user->username}}</li>
   @endauth
   @guest

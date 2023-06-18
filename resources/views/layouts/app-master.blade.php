@@ -37,7 +37,7 @@ window.addEventListener('scroll', function() {
 
 
 <section class="content">
-    <h1>Anyone can be loved. By dogs.</h1>
+    <h1>Anyone can be a hero.</h1>
 <article class="main-container section">
 
 <div class="hidden-left"><hr><p class="hidden-text">The <b>Shetland Sheepdog</b> is a small, active, and agile herding dog standing between 13 and 16 inches at the shoulder. The long coat is harsh and straight, with a dense undercoat, and comes in black, blue merle, and sable, with white markings. Shelties (and their owners) enjoy the challenge of coming up with new things to learn, from “helping” around the house to canine gymnastics. They're considered extremely intelligent and respond well if you're patient and also make training time fun. Often, the Sheltie is timid and reserved towards strangers, and it will let its voice be heard on this when need be. Although the tendency to bark a lot is considered by some to be a fault, it is this characteristic that makes the Sheltie an excellent watch dog.</p><hr></div>

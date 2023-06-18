@@ -16,7 +16,9 @@ body {
   }
 
   .login-form {
-    background-color: #FFFFFF;
+    margin-left: 50vh;
+    margin-top: 80vh;
+    background-color: rgb(222, 184, 135, 0.8);
     border-radius: 8px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -63,8 +65,9 @@ body {
     text-decoration: none;
   }</style>
 
-
+@include('layouts.partials.navbar')
 <div class="container">
+  
     <form class="login-form" method="post" action="{{ route('login.perform') }}">
       <h2>Login</h2>
 

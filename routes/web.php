@@ -12,10 +12,6 @@ use App\Http\Controllers\CharacterController;
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::redirect('/', 'users');
@@ -30,11 +26,14 @@ Route::resource('users', UserController::class);
     */
 
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
+Route::resource('character', CharacterController::class, ['except' =>['index', 'create']]);
 Route::get('guilds', [GuildController::class,'index']);
 Route::get('game', [GameController::class, 'index']);
 Route::get('{id}/guild', [GuildController::class,'show']);
 Route::get('profile', [UserController::class,'show']);
 Route::get('guilds/create', [GuildController::class,'create']);
+Route::get('characters/create', [CharacterController::class,'create']);
+
 
 /* Login, Logout and Register Routes */
 Route::group(['namespace' => 'App\Http\Controllers'], function()

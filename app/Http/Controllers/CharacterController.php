@@ -6,7 +6,7 @@ use App\Models\Guild;
 use App\Models\Character;
 use Illuminate\Http\Request;
 
-class GuildController extends Controller
+class CharacterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,14 +31,14 @@ class GuildController extends Controller
     public function store(Request $request)
     {
         $character = new Character();
-        $character->name = $request->character_name;
+        $character->name = $request->name;
         $character->user_id = $request->user_id;
         $character->level=1;
         $character->guild_id = NULL;
         $character->duelsWon = 0;
         $character->strength =0;
         $character->save();
-        return redirect('4/guild');
+        return redirect('profile');
     }
 
     /**
