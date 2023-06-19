@@ -72,6 +72,8 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        app('App\Http\Controllers\LogoutController')->perform();
+        User::findOrfail($id)->delete();
+        return redirect("/");
     }
 }

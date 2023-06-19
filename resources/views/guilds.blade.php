@@ -35,7 +35,7 @@ li{
 <body>
 @include('layouts.partials.navbar')
  <h1>All of the guilds:</h1>
- @auth <?php $user = Auth::user(); ?>
+<?php $user = Auth::user(); use App\Models\Character;?>
  <div class="profile-container">
  @if (count($guilds) == 0)
     <p class='error'>There are no records in the database!</p>
@@ -53,10 +53,15 @@ li{
 </div>
 </li>
  @endforeach
- @endauth
- </ul>
  @endif
+ </ul>
+
+ @auth 
+ <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
+@if($character->guild_id==NULL)
  <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">Create a new guild</a>
+ @endif
+ @endauth
 </div>
 
 </body>

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guild;
+use App\Models\User;
 use App\Models\Character;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Auth;
 
 class CharacterController extends Controller
 {
@@ -70,6 +73,11 @@ class CharacterController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = Auth::user();
+        $character = Character::findOrFail($id);
+        if($user->active_character_id==$id) $user->active_character_id = NULL;
+        $character->delete();
+        $user->save();
+        return redirect("/profile");
     }
 }

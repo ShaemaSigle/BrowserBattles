@@ -7,8 +7,8 @@
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
     <style>
 .profile-container {
-  width: 80vw;
-  height: 80vh;
+  width: fit-content;
+  height: fit-content;
   margin: auto;
   padding: 40px;
   background-color: rgb(222, 184, 135, 0.8);
@@ -28,10 +28,10 @@
 .profile-form{
     width:24vw;
 }
-.profile-form button {
+.profile-form button, .deletion {
   background-color: #FFC0CB;
   border: none;
-  color: #FFFFFF;
+  color: #000000;
   padding: 12px 20px;
   border-radius: 4px;
   width: 100%;
@@ -39,10 +39,10 @@
   font-size: 16px;
 }
 
-.profile-form button:hover {
+.profile-form button:hover, .deletion:hover {
   background-color: #FFB6C1;
 }
-.btn{
+.btn, .deletion{
     width: auto;
 }
 .character{
@@ -81,6 +81,11 @@
  <h3 style="padding-left: 0;">Your characters:</h3>
  @foreach ($characters as $character)
  <li class="character">
+ <form method="POST" class="blankit" action="{{action([App\Http\Controllers\CharacterController::class, 'destroy'],  $character->id) }}">
+    @csrf
+    @method('DELETE')
+    <button class="btn btn-outline-light li-right play_as" style="background-color: red;" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this character?')">delete</button>
+    </form>
  <div style="margin-top:15px;">{{ $character->name }} - {{ $character->level }} LVL  @if($character->id != $user->active_character_id)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\UserController::class, 'update'], [ 'user' => $user]) }}>
     <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
@@ -96,8 +101,7 @@
  </ul>
  @endif
  <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">Create a new character</a>
-<br>
-<br>
+<br><br>
     <form style="float: left" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
         [ 'user' => $user]) }}>
         @csrf
@@ -122,6 +126,12 @@
       <input type="password" name="password"  id="password" placeholder="New Password" required>
       <button type="submit">Update Password</button>
     </form>
-  </div>
+    
+    <form method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $user->id) }}">
+    @csrf
+    @method('DELETE')
+    <p>You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this account?')">delete this account</button></p>
+    </form>
+</div>
 </body>
 </html>
