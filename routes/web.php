@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GuildController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\CharacterController;
 
 use Illuminate\Support\Facades\Auth;
@@ -29,12 +30,14 @@ Route::resource('users', UserController::class);
 
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
 Route::resource('character', CharacterController::class, ['except' =>['index', 'create']]);
+Route::resource('encounter', EncounterController::class, ['except' =>['index', 'create']]);
 Route::get('guilds', [GuildController::class,'index']);
 Route::get('game', [GameController::class, 'index']);
 Route::get('{id}/guild', [GuildController::class,'show']);
 Route::get('profile', [UserController::class,'show']);
 Route::get('guilds/create', [GuildController::class,'create']);
 Route::get('characters/create', [CharacterController::class,'create']);
+Route::get('game/encounter/{id}', [EncounterController::class,'show']);
 
 
 /* Login, Logout and Register Routes */

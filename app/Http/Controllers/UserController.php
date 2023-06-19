@@ -58,7 +58,7 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
         if($request->name != NULL) $user->username = $request->name;
         if($request->email != NULL) $user->email = $request->email;
         if($request->password != NULL) $user->password=$request->password;

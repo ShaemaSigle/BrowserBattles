@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('character_id')->constrained()->cascadeOnDelete();
             $table->foreignId('enemy_id')->constrained()->cascadeOnDelete();
-            $table->string('result');
+            $table->string('result')->nullable();
             $table->timestamps();
         });
     }
