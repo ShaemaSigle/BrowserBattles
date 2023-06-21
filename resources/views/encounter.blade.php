@@ -9,7 +9,8 @@
     <style>
 .profile-container {
   width: 100%;
-  height: 100vh;
+  width: 80vw;
+  height: 80vh;
   margin: auto;
   padding: 40px;
   background-color: rgb(222, 184, 135, 0.8);
@@ -53,12 +54,14 @@
     @if ($user->active_character_id == NULL)
  <p class='error'>You don't have a characters selected! Select a character (or create a new one) in order to play. You can do it in your profile.</p>
  @else
-
+Enemy: {{$enemy->name}}
+<br>
 <img src="{{asset('assets/img/'.$enemy->icon_path)}}" alt="" height="200px" width="200px">
 
 <br>
 Strength: {{$enemy->strength}}
-<div style="float: right; margin-top: -27vh;"> 
+<div style="float: right; margin-top: -27vh; text-align:right;"> 
+You:{{$character->name}}<br>
   <img src="{{asset('assets/img/default_knight.png')}}" alt="" height="200px" width="200px">
   <br>
   Your strength: {{$character->strength}}

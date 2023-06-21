@@ -13,6 +13,7 @@
     .play_as{
     height: 4vh;
     padding: 0px 5px 0px 5px;
+    width: fit-content;
     width:fit-content;
 }
 .blankit{
@@ -31,17 +32,21 @@
   border-radius: 8px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
+.table-responsive{
+    overflow-y: scroll;
+    height: 50vh;
+}
 </style>
 </head>
 <body>
 @include('layouts.partials.navbar')
  <h1>All of the guilds:</h1>
-<?php $user = Auth::user(); use App\Models\Character;?>
+<?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
  <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
  @endauth
  <div class="profile-container">
-<div class="container box">
+<div class="container-box">
    <div class="panel panel-default">
     <div class="panel-heading">Search Guilds</div>
     <div class="panel-body">
@@ -67,9 +72,15 @@
     </div>    
    </div>
   </div>
+  <br>
+  @auth
   @if($character->guild_id==NULL)
  <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">Create a new guild</a>
+ @else
+ Your guild: <?php $guild = Guild::findOrFail($character->guild_id); ?>{{$guild->name}}
+ <a href="{{$guild->id}}/guild" class="btn btn-outline-light play_as">Press here to view</a>
  @endif
+ @endauth
  </div>
 
 </body>

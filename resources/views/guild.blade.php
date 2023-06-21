@@ -6,19 +6,24 @@
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <style>
 .profile-container {
-  width: 100%;
-  height: 100vh;
+    width: 80vw;
+  height: 80vh;
   margin: auto;
   padding: 40px;
   background-color: rgb(222, 184, 135, 0.8);
   border-radius: 8px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
-
+.flying{
+    margin-top: -40%;
+    margin-right: 15%;
+    float: right;
+}
 .profile-form button:hover, .deletion:hover {
   background-color: #FFB6C1;
 }
@@ -41,26 +46,54 @@
     padding: 0;
     position: relative;
 }
+.table-responsive{
+    overflow-y: scroll;
+    height: 50vh;
+    width: 40vw;
+}
 </style>
 </head>
 <body>
 
 @include('layouts.partials.navbar')
+<?php
+use App\Models\Guild;
+use App\Models\Character;
+use App\Http\Controllers\GuildController;
+ $user = Auth::user(); 
+?>
+<h1>Guild view</h1>
+ <div class="profile-container">
+ 
+ <div class="container-box">
+    <h3 style="padding: 0; margin: 0;">List of members</h3>
+   <div class="panel panel-default" style="width: 40vw;">
+    <div class="panel-heading">Seek players</div>
+    <div class="panel-body">
+     <div class="form-group">
+      <input type="text" name="search" id="search" class="form-control" placeholder="Begin inputting the name of the guild..." />
+     </div>
+     <div class="table-responsive">
+      <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
+      <table class="table table-striped table-bordered">
+       <thead>
+        <tr>
+         <th>Name</th>
+         <th>Strength</th>
+         <th>Level</th>
+         <th>DuelsWon</th>
+        </tr>
+       </thead>
+       <tbody>
+       </tbody>
+      </table>
+     </div>
+    </div>    
+   </div>
 
- <h1>Це наша гильдия {{$guild->name}}:</h1>
- @if (count($characters) == 0)
- <p class='error'>There are no records in the database!</p>
- @else
- <ul>
- @foreach ($characters as $character)
- <li>
- {{ $character->name }} - {{ $character->level }}
- </li>
- @endforeach
- </ul>
- @endif
- <?php $user = Auth::user();?>
- @can('destroy', $guild)
+
+
+  @can('destroy', $guild)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'destroy'], [ 'guild' => $guild->id]) }}>
     <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
     @csrf
@@ -68,6 +101,39 @@
     <button type="submit" class="btn btn-outline-light li-right play_as">Delete guild</button>
  </form>
  @endcan
+ <h1 class="flying">{{$guild->name}}</h1>
+
+ @auth
+ <?php $character = Character::where('id', '=', $user->active_character_id)->first(); ?>
+ <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'join'], ['id' => $guild->id]) }}>
+    @csrf
+    @method('PuT')
+    <button type="submit" class="btn btn-outline-light li-right play_as">Join guild</button>
+ </form>
+ @endauth
+</div>
  
 </body>
 </html>
+<script>
+$(document).ready(function(){
+ fetch_character_data();
+ function fetch_character_data(query = ''){
+  $.ajax({
+   url:"{{ route('list_members.action', $guild->id) }}",
+   method:'GET',
+   data:{query:query},
+   dataType:'json',
+   success:function(data){
+    $('tbody').html(data.table_data);
+    $('#total_records').text(data.total_data);
+   }
+  })
+ }
+
+ $(document).on('keyup', '#search', function(){
+  var query = $(this).val();
+  fetch_character_data(query);
+ });
+});
+</script>

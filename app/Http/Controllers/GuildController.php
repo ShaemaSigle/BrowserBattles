@@ -7,6 +7,7 @@ use App\Models\Character;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class GuildController extends Controller
 {
@@ -53,8 +54,7 @@ class GuildController extends Controller
     public function show($id)
     {
         $guild = Guild::where('id', '=', $id)->first();
-        $characters = Character::where('guild_id', '=', $id)->get();
-        return view('guild', ['guild' => $guild, 'characters' => $characters]);
+        return view('guild', ['guild' => $guild]);
     }
 
     /**
@@ -64,7 +64,21 @@ class GuildController extends Controller
     {
         //
     }
-
+    
+    public function join($id){
+        //$character = Character::findOrFail($request->char_id);
+        $guild = Guild::findOrFail($id);
+        $user = Auth::user();
+        $character = Character::findOrFail($user->active_character_id);
+        if($character->guild_id == NULL) {
+            $character->guild_id = $id;
+            $character->save();
+            $guild->members_amount +=1;
+            $guild->save();
+            //return view('guilds', ['guild' => $guild]);
+        }
+        return redirect('guilds');
+    }
     /**
      * Update the specified resource in storage.
      */
@@ -78,26 +92,57 @@ class GuildController extends Controller
      */
     public function destroy(string $guild)
     {
-       // if (Gate::denies('is-admin')) {  return redirect('dashboard') ->withErrors('Access denied');}
-            
+       // if (Gate::denies('is-admin')) {  return redirect('dashboard') ->withErrors('Access denied');} 
         $guild = Guild::findOrFail($guild);
         $guild->delete();
         return redirect("/guilds");
     }
 
-    function action(Request $request)
-    {
-     if($request->ajax())
-     {
+    function list_members(Request $request, $id){
+        $guild = Guild::where('id', '=', $id)->first();
+        if($request->ajax()){
+            $output = '';
+            $query = $request->get('query');
+            if($query != ''){
+             $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->where('name', 'like', '%'.$query.'%')->get();
+            }
+            else{
+             $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->orderBy('level', 'desc')->get();
+            }
+            $total_row = $data->count();
+            if($total_row > 0){
+             foreach($data as $row){
+              $output .= '
+              <tr>
+               <td>'.$row->name.'</td>
+               <td>'.$row->strength.'</td>
+               <td>'.$row->level.'</td>
+               <td>'.$row->duelsWon.'</td>
+              </tr>
+              ';
+             }
+            }
+            else{
+             $output = '
+             <tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+            }
+            $data = array(
+             'table_data'  => $output,
+             'total_data'  => $total_row
+            );
+      
+            echo json_encode($data);
+           }
+    }
+
+    function action(Request $request){
+     if($request->ajax()){
       $output = '';
       $query = $request->get('query');
       if($query != ''){
        $data = DB::table('guilds')
          ->where('name', 'like', '%'.$query.'%')->get();
         //  ->orWhere('Address', 'like', '%'.$query.'%')
-        //  ->orWhere('City', 'like', '%'.$query.'%')
-        //  ->orWhere('PostalCode', 'like', '%'.$query.'%')
-        //  ->orWhere('Country', 'like', '%'.$query.'%')
         //  ->orderBy('CustomerID', 'desc')
       }
       else{
@@ -106,7 +151,6 @@ class GuildController extends Controller
       $total_row = $data->count();
       if($total_row > 0){
        foreach($data as $row){
-        $html = $row->id.'/guild';
         $output .= '
         <tr>
          <td>'.$row->name.'</td>
@@ -114,19 +158,15 @@ class GuildController extends Controller
          <td>'.$row->description.'</td>
          <td>'.$row->isopen.'</td>
          <td>
-         <a href="'.$html.'" class="btn btn-outline-light play_as">Press here to view</a>
+         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">Press here to view</a>
          </td>
         </tr>
         ';
        }
       }
-      else
-      {
+      else{
        $output = '
-       <tr>
-        <td align="center" colspan="5">No Data Found</td>
-       </tr>
-       ';
+       <tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
       }
       $data = array(
        'table_data'  => $output,
