@@ -17,20 +17,6 @@
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.profile-form{
-    width:24vw;
-}
-.profile-form button, .deletion {
-  background-color: #FFC0CB;
-  border: none;
-  color: #000000;
-  padding: 12px 20px;
-  border-radius: 4px;
-  width: 100%;
-  cursor: pointer;
-  font-size: 16px;
-}
-
 .profile-form button:hover, .deletion:hover {
   background-color: #FFB6C1;
 }
@@ -49,25 +35,63 @@
 .blankit{
     border: none;
     background:none;
-    padding: 0;
     float: left;
+    padding: 0;
     position: relative;
 }
 </style>
 </head>
 
 <body>
-<?php use App\Models\Character;?>
+<?php use App\Models\Character; use App\Models\Enemy;?>
  <h1>@auth <?php $user = Auth::user(); ?> Let's play, {{$user->username}}!</h1>
+ <?php $character = Character::findOrFail($user->active_character_id); $enemy = Enemy::findOrFail($encounter->enemy_id)?>
   <div class="profile-container">
-    <h2>Encounter</h2>
+    <h2 style="text-align: center;">Encounter</h2>
+  <div style="text-align: center;">You are facing a terrible {{$enemy->name}}!</div>
     
     @if ($user->active_character_id == NULL)
  <p class='error'>You don't have a characters selected! Select a character (or create a new one) in order to play. You can do it in your profile.</p>
  @else
- <ul>
-<?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
-Well you are dead now mb 
+
+<img src="{{asset('assets/img/'.$enemy->icon_path)}}" alt="" height="200px" width="200px">
+
+<br>
+Strength: {{$enemy->strength}}
+<div style="float: right; margin-top: -27vh;"> 
+  <img src="{{asset('assets/img/default_knight.png')}}" alt="" height="200px" width="200px">
+  <br>
+  Your strength: {{$character->strength}}
+</div>
+<br>
+
+@if($encounter->result==NULL)
+<div style="margin-left: 45%;">
+<form method="POST" class="blankit" action={{action([App\Http\Controllers\EncounterController::class, 'update'], [ 'encounter' => $encounter])}}>
+    <input type="hidden" name="encounter" id="encounter" value="{{ $encounter->id }}">
+    <input type="hidden" name="result" id="result" value="userLost">
+    @csrf
+    @method('put')
+    <button type="submit" class="btn btn-outline-light li-right play_as">Escape</button>
+ </form>
+ <form method="POST" class="blankit" action={{action([App\Http\Controllers\EncounterController::class, 'update'], [ 'encounter' => $encounter])}}>
+    <input type="hidden" name="encounter" id="encounter" value="{{ $encounter->id }}">
+    <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
+    @csrf
+    @method('put')
+    <button type="submit" class="btn btn-outline-light li-right play_as">Fight</button>
+ </form>
+<br><br>
+</div>
+
+@elseif($encounter->result == "userWon") You won! The encounter has ended.
+@elseif($encounter->result == "userLost") You lost! The encounter has ended.
+@endif
+
+ <br>
+You can leave after the fight ends or before that, in which case the fight will be postponed.
+<a href="{{action([App\Http\Controllers\GameController::class, 'index'])}}" class="btn btn-outline-light li-right play_as">Leave</a>
+
 @endif
 @endauth
 </div>

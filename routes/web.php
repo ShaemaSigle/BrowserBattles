@@ -39,6 +39,9 @@ Route::get('guilds/create', [GuildController::class,'create']);
 Route::get('characters/create', [CharacterController::class,'create']);
 Route::get('game/encounter/{id}', [EncounterController::class,'show']);
 
+Route::get('/guilds/action', [GuildController::class,'action'])->name('guild_search.action');
+
+
 
 /* Login, Logout and Register Routes */
 Route::group(['namespace' => 'App\Http\Controllers'], function()
