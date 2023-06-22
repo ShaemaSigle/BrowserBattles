@@ -34,7 +34,6 @@ class EncounterController extends Controller
     {
         //It is possible that the user has an unfinished battle with no result, 
         //in which case it has to be finished before creating a new encounter.
-
         $encounter = Encounter::Where('character_id', '=', $request->active_character_id)->where('result', '=', NULL)->first();
         if($encounter != NULL) return view('encounter', compact('encounter'));
         $encounter = new Encounter();

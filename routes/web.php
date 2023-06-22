@@ -27,7 +27,11 @@ Route::resource('guild', GuildController::class, ['except' =>['index', 'create']
 Route::resource('character', CharacterController::class, ['except' =>['index', 'create']]);
 Route::resource('encounter', EncounterController::class, ['except' =>['index', 'create']]);
 
-/* Login, Logout and Register Routes */
+Route::fallback(function () {
+    return view('oops');
+});
+
+// Login, Logout and Register stuff
 Route::group(['namespace' => 'App\Http\Controllers'], function(){ 
     Route::get('/', 'HomeController@index')->name('home.index');
     Route::group(['middleware' => ['guest']], function() {
@@ -40,4 +44,3 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::get('/logout', 'LogoutController@perform')->name('logout.perform');
     });
 });
-/* ENDOF Login, Logout and Register Routes */

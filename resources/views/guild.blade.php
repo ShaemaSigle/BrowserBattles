@@ -51,6 +51,21 @@
     height: 50vh;
     width: 40vw;
 }
+.subdescr{
+    float: right;
+    margin-top: -30%;
+    margin-right: 15%;
+}
+.descr{
+    background-color: rgb(201, 168, 125, 0.8);
+    height: 200px;
+    width: 300px;
+    border-style:solid;
+    border-width: 1px;
+    border-radius: 10px;
+    border-color: rgb(232, 229, 220);
+    padding: 10px;
+}
 </style>
 </head>
 <body>
@@ -61,6 +76,7 @@ use App\Models\Guild;
 use App\Models\Character;
 use App\Http\Controllers\GuildController;
  $user = Auth::user(); 
+ $owner = Character::findOrFail($guild->owner);
 ?>
 <h1>Guild view</h1>
  <div class="profile-container">
@@ -91,7 +107,13 @@ use App\Http\Controllers\GuildController;
     </div>    
    </div>
 
-
+<div class="subdescr">
+    Description
+   <div class="descr">
+    {{$guild->description}}
+   </div>
+   Owner: {{$owner->name}}
+</div>
 
   @can('destroy', $guild)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'destroy'], [ 'guild' => $guild->id]) }}>
@@ -104,12 +126,16 @@ use App\Http\Controllers\GuildController;
  <h1 class="flying">{{$guild->name}}</h1>
 
  @auth
+ @if($user->active_character_id)
  <?php $character = Character::where('id', '=', $user->active_character_id)->first(); ?>
+@if($character->guild_id == NULL)
  <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'join'], ['id' => $guild->id]) }}>
     @csrf
     @method('PuT')
     <button type="submit" class="btn btn-outline-light li-right play_as">Join guild</button>
  </form>
+ @endif
+ @endif
  @endauth
 </div>
  

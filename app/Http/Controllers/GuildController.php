@@ -39,7 +39,7 @@ class GuildController extends Controller
         $guild->owner = $request->guild_owner;
         $guild->members_amount=1;
         $guild->icon_path = 'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\snek.jpg';
-        $guild->description = '';
+        $guild->description = $request->guild_description;
         $guild->isopen ='false';
         $owner = Character::where('id', '=', $request->guild_owner)->first();
         $guild->save();

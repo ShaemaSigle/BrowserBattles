@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('role')->default('user');
             $table->string('active_character_id')->nullable();
+            $table->string('profpic_path')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

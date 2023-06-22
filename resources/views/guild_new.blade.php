@@ -36,6 +36,8 @@ button:hover {
  <input type="hidden" name="guild_owner" value="{{ $character->id }}">
  <label for='guild_name'>Guild name:</label>
  <input type="text" name="guild_name" id="guild_name">
+ <label for='guild_description'>Description (optional):</label>
+ <input type="text" name="guild_description" id="guild_description">
  <button type="submit" value="Add">Save</button>
  </form>
 </body>
