@@ -103,12 +103,8 @@ class GuildController extends Controller
         if($request->ajax()){
             $output = '';
             $query = $request->get('query');
-            if($query != ''){
-             $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->where('name', 'like', '%'.$query.'%')->get();
-            }
-            else{
-             $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->orderBy('level', 'desc')->get();
-            }
+            if($query != '') $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->where('name', 'like', '%'.$query.'%')->get();
+            else $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->orderBy('level', 'desc')->get();
             $total_row = $data->count();
             if($total_row > 0){
              foreach($data as $row){
@@ -132,22 +128,42 @@ class GuildController extends Controller
             );
       
             echo json_encode($data);
-           }
+        }
     }
 
     function action(Request $request){
      if($request->ajax()){
-      $output = '';
-      $query = $request->get('query');
-      if($query != ''){
-       $data = DB::table('guilds')
-         ->where('name', 'like', '%'.$query.'%')->get();
-        //  ->orWhere('Address', 'like', '%'.$query.'%')
-        //  ->orderBy('CustomerID', 'desc')
-      }
-      else{
-       $data = DB::table('guilds')->orderBy('id', 'desc')->get();
-      }
+        //dd("sorting"); НЕ ЮЗАЙ ЭТУ ХУЙНЮ, В ПРОШЛЫЙ РАЗ ПОЛЧАСА ЕБАЛАСЬ, ЧТОБЫ ПОНЯТЬ, ПОЧЕМУ ВСЁ ВДРУГ СЛОМАЛОСЬ
+        $query = $request->get('searchValue');
+        $output = '';
+        $orderByAD = '';
+        $orderBy = '';
+        $sortingParam = $request->get('sortValue');
+        if($sortingParam != ''){
+            if($sortingParam=='MembersAsc'){
+                $orderByAD = 'ASC';
+                $orderBy = 'members_amount';
+           } 
+            if($sortingParam=='MembersDesc'){
+                $orderByAD= 'DESC';
+                $orderBy = 'members_amount';
+            }
+            if($sortingParam=='Alfabetically'){
+                $orderByAD= 'ASC';
+                $orderBy = 'name';
+            }
+        }
+        if($query != '' && $sortingParam != ''){
+            $data = DB::table('guilds')->where('name', 'like', '%'.$query.'%')->orderBy($orderBy, $orderByAD)->get();
+             //  ->orWhere('Address', 'like', '%'.$query.'%')
+           }
+           else if($orderByAD != ''){
+            $data = DB::table('guilds')->orderBy($orderBy, $orderByAD)->get();
+           }
+           else if($query != ''){
+             $data = DB::table('guilds')->where('name', 'like', '%'.$query.'%')->get();
+           }
+           else $data =  DB::table('guilds')->orderBy('id', 'desc')->get(); 
       $total_row = $data->count();
       if($total_row > 0){
        foreach($data as $row){
@@ -164,10 +180,7 @@ class GuildController extends Controller
         ';
        }
       }
-      else{
-       $output = '
-       <tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
-      }
+      else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
       $data = array(
        'table_data'  => $output,
        'total_data'  => $total_row
@@ -176,5 +189,4 @@ class GuildController extends Controller
       echo json_encode($data);
      }
     }
-
 }

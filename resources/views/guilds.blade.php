@@ -52,6 +52,11 @@
     <div class="panel-body">
      <div class="form-group">
       <input type="text" name="search" id="search" class="form-control" placeholder="Begin inputting the name of the guild..." />
+      <select id="sort">
+  <option value="actual value 1">MembersDesc</option>
+  <option value="actual value 2">MembersAsc</option>
+  <option value="actual value 3">Alfabetically</option>
+</select>
      </div>
      <div class="table-responsive">
       <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
@@ -74,9 +79,9 @@
   </div>
   <br>
   @auth
-  @if($character->guild_id==NULL)
+  @if($character && $character->guild_id==NULL)
  <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">Create a new guild</a>
- @else
+ @elseif ($character && $character->guild_id!=NULL)
  Your guild: <?php $guild = Guild::findOrFail($character->guild_id); ?>{{$guild->name}}
  <a href="{{$guild->id}}/guild" class="btn btn-outline-light play_as">Press here to view</a>
  @endif
@@ -89,11 +94,13 @@
 <script>
 $(document).ready(function(){
  fetch_guild_data();
- function fetch_guild_data(query = ''){
+ function fetch_guild_data(searchValue = '', sortValue = ''){
   $.ajax({
    url:"{{ route('guild_search.action') }}",
    method:'GET',
-   data:{query:query},
+   data: {searchValue: searchValue,
+    sortValue: sortValue
+  },
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
@@ -101,10 +108,14 @@ $(document).ready(function(){
    }
   })
  }
-
+ var sortValue; var searchValue;
+ $("#sort").change(function () {
+        sortValue = $("#sort :selected").text()
+        fetch_guild_data(searchValue, sortValue);
+    });
  $(document).on('keyup', '#search', function(){
-  var query = $(this).val();
-  fetch_guild_data(query);
+  searchValue = $(this).val();
+  fetch_guild_data(searchValue, sortValue);
  });
 });
 </script>
