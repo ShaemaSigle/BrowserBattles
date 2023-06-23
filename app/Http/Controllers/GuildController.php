@@ -65,18 +65,22 @@ class GuildController extends Controller
         //
     }
     
-    public function join($id){
-        //$character = Character::findOrFail($request->char_id);
+    public function join($id){ //it also manages leaving
         $guild = Guild::findOrFail($id);
         $user = Auth::user();
         $character = Character::findOrFail($user->active_character_id);
         if($character->guild_id == NULL) {
-            $character->guild_id = $id;
-            $character->save();
+            $character->guild_id = $id; 
             $guild->members_amount +=1;
             $guild->save();
-            //return view('guilds', ['guild' => $guild]);
         }
+        else if($character->guild_id == $id && $character->id != $guild->owner){
+            $character->guild_id = NULL;
+            $character->save();
+            $guild->members_amount -=1;
+        }
+        $character->save();
+        $guild->save();
         return redirect('guilds');
     }
     /**

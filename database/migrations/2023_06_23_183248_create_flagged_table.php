@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('characters', function (Blueprint $table) {
+        Schema::create('flagged', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('strength');
-            $table->integer('level');
-            $table->integer('duelsWon');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('guild_id')->nullable();
+            $table->foreignId('object_id_user');
+            $table->foreignId('object_id_character');
+            $table->foreignId('object_id_guild');
+            $table->string('reason');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('characters');
+        Schema::dropIfExists('flagged');
     }
 };

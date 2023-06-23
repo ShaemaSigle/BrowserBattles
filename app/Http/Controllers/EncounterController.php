@@ -38,7 +38,7 @@ class EncounterController extends Controller
         if($encounter != NULL) return view('encounter', compact('encounter'));
         $encounter = new Encounter();
         $encounter->character_id = $request->active_character_id;
-        $encounter->enemy_id = rand(1, 3);
+        $encounter->enemy_id = rand(1, 5);
         $encounter->save();
         return view('encounter', compact('encounter'));
         //return redirect('game/encounter/'.$encounter->id)->with([ 'encounter' => $encounter ]);

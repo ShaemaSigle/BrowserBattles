@@ -23,6 +23,9 @@ Route::get('/guilds/action', [GuildController::class,'action'])->name('guild_sea
 Route::put('{id}/guild', [GuildController::class,'join']);
 Route::get('{id}/guild/list_members', [GuildController::class,'list_members'])->name('list_members.action');
 
+Route::view('/leaderboards', 'leaderboards');
+Route::get('/leaderboards/live', [CharacterController::class,'live'])->name('live_search.action');
+
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
 Route::resource('character', CharacterController::class, ['except' =>['index', 'create']]);
 Route::resource('encounter', EncounterController::class, ['except' =>['index', 'create']]);

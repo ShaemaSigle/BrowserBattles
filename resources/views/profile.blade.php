@@ -7,11 +7,11 @@
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
     <style>
 .profile-container {
-  width: fit-content;
+  width: 80%;
   height: fit-content;
   margin: auto;
   padding: 40px;
-  background-color: rgb(222, 184, 135, 0.8);
+  background-color: rgb(222, 184, 135);
   border-radius: 8px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -61,21 +61,43 @@
     float: left;
     position: relative;
 }
+.blankitNoFloat{
+    border: none;
+    background:none;
+    padding: 0;
+    width: fit-content;
+}
+ul{
+  padding: 0;
+}
 
 </style>
 </head>
 
 <body>
 @include('layouts.partials.navbar')
- <h1>@auth <?php $user = Auth::user(); ?> Wow, it's {{$user->username}}'s profile!</h1>
+ <h1>@auth <?php 
+    $user = Auth::user(); 
+    if($user->profpic_path != NULL) $image =  $user->profpic_path;
+    else $image = 'default_knight.png';
+ ?> 
+ 
+ Wow, it's {{$user->username}}'s profile!</h1>
   <div class="profile-container">
     <h2>Profile</h2>
-    <p><strong>Email:</strong> {{$user->email}}</p>
-    <p><strong>Name:</strong> {{$user->username}}</p>
-    <p><strong>Your Role:</strong> {{$user->role}}</p>
-    
+    <br>
+    <strong>Email:</strong> {{$user->email}}<br>
+    <strong>Name:</strong> {{$user->username}}<br>
+    <strong>Your Role:</strong> {{$user->role}}<br>
+    <div style="float: right; margin-top: -20vh; text-align:right;"> 
+    Here's your profile picture!   
+    </div><br>
+      <div style="float: right; margin-top: -20vh; text-align:right;"> 
+  <img src="{{asset('assets/img/'.$image)}}" alt="" height="250px" width="250px">
+    </div>
+    <br>
     @if (count($characters) == 0)
- <p class='error'>You don't have any characters!</p>
+ You don't have any characters!
  @else
  <ul>
  <h3 style="padding-left: 0;">Your characters:</h3>
@@ -97,41 +119,77 @@
  @endif
 </li>
  @endforeach
- @endauth
+ 
  </ul>
  @endif
+ <br>
  <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">Create a new character</a>
-<br><br>
-    <form style="float: left" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+<br><br><hr><br>Here you can edit your account.
+<br> <br>
+
+    <div style="float: left;" class="form-group form-floating mb-3">
+    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
         [ 'user' => $user]) }}>
         @csrf
         @method('put')
-        <p>Wanna change things a little bit? You can do it here:</p>
-      <input type="email" name="email"  id="email" placeholder="New Email" required>
-      <button type="submit">Update Email</button>
+        <label for="floatingEmail">Email address</label>
+            <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="name@example.com" required="required" autofocus>
+            @if ($errors->has('email'))
+                <span class="text-danger text-left">{{ $errors->first('email') }}</span>
+            @endif
+            <button type="submit">Update Email</button>
     </form>
-    <form style="float: left" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+        </div>
+    <div style="float: left;" class="form-group form-floating mb-3">
+    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
         [ 'user' => $user]) }}>
         @csrf
         @method('put')
-        <p>Wanna change things a little bit? You can do it here:</p>
-      <input type="name" name="name" placeholder="New Nickname" required>
-      <button type="submit">Update Username</button>
+        <label for="floatingName">Username</label>
+            <input type="name" class="form-control" name="username" value="{{ old('username') }}" placeholder="Username" required="required" autofocus>
+            @if ($errors->has('username'))
+                <span class="text-danger text-left">{{ $errors->first('username') }}</span>
+            @endif
+            <button type="submit">Update Username</button>
     </form>
-    <form style="float: left" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+        </div>
+        
+        <form style="float: left;" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
         [ 'user' => $user]) }}>
         @csrf
         @method('put')
-        <p>Wanna change things a little bit? You can do it here:</p>
-      <input type="password" name="password"  id="password" placeholder="New Password" required>
-      <button type="submit">Update Password</button>
-    </form>
-    
-    <form method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $user->id) }}">
+        <div class="form-group form-floating mb-3">
+        <label for="floatingPassword">Password</label>
+            <input type="password" class="form-control" name="password" value="{{ old('password') }}" placeholder="Password" required="required">
+            @if ($errors->has('password'))
+                <span class="text-danger text-left">{{ $errors->first('password') }}</span>
+            @endif
+        </div>
+
+        <div class="form-group form-floating mb-3">
+        <label for="floatingConfirmPassword">Confirm Password</label>
+            <input type="password" class="form-control" name="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Confirm Password" required="required">
+                    @if ($errors->has('password_confirmation'))
+                <span class="text-danger text-left">{{ $errors->first('password_confirmation') }}</span>
+            @endif
+            <button type="submit">Update Password</button>
+        </div>
+        </form>
+        <div class="form-group form-floating mb-3">
+        <form style="float: left; margin-top: -10vh;" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+        [ 'user' => $user]) }} method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('put')
+          <label for="ProfPic">Upload a new Profile Picture</label>
+          <input type="file" name="image" class="form-control">
+          <button type="submit" class="btn btn-success">Upload</button>
+      </form></div>
+<form class="blankitNoFloat" method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $user->id) }}">
     @csrf
     @method('DELETE')
-    <p>You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this account?')">delete this account</button></p>
+    You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this account?')">delete this account</button>
     </form>
 </div>
+@endauth
 </body>
 </html>

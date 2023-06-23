@@ -52,7 +52,7 @@
         <li><a href="{{action([App\Http\Controllers\GameController::class, 'index'])}}" class="nav-link px-2 text-white">Game</a></li>
         @endauth
         <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">Guild</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Leaderboards</a></li>
+        <li><a href="/leaderboards" class="nav-link px-2 text-white">Leaderboards</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Suggest</a></li>
       </ul>
       <?php use App\Models\Character;?>

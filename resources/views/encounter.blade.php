@@ -46,23 +46,29 @@
 <body>
 <?php use App\Models\Character; use App\Models\Enemy;?>
  <h1>@auth <?php $user = Auth::user(); ?> Let's play, {{$user->username}}!</h1>
- <?php $character = Character::findOrFail($user->active_character_id); $enemy = Enemy::findOrFail($encounter->enemy_id)?>
+ <?php 
+  $character = Character::findOrFail($user->active_character_id); 
+  $enemy = Enemy::findOrFail($encounter->enemy_id);
+    if($user->profpic_path != NULL) $image =  $user->profpic_path;
+    else $image = 'default_knight.png';
+ ?> 
+ ?>
   <div class="profile-container">
     <h2 style="text-align: center;">Encounter</h2>
-    
+
   <div style="text-align: center;">You are facing a terrible {{$enemy->name}}!</div>
     @if ($user->active_character_id == NULL)
  <p class='error'>You don't have a characters selected! Select a character (or create a new one) in order to play. You can do it in your profile.</p>
  @else
 Enemy: {{$enemy->name}}
 <br>
-<img src="{{asset('assets/img/'.$enemy->icon_path)}}" alt="" height="200px" width="200px">
+<img src="{{asset('assets/img/'.$enemy->icon_name)}}" alt="" height="200px" width="200px">
 <br>
 Strength: {{$enemy->strength}}
 
 <div style="float: right; margin-top: -27vh; text-align:right;"> 
 You:{{$character->name}}<br>
-  <img src="{{asset('assets/img/default_knight.png')}}" alt="" height="200px" width="200px">
+  <img src="{{asset('assets/img/'.$image)}}" alt="" height="200px" width="200px">
   <br>
   Your strength: {{$character->strength}}
 </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>All guilds</title>
+ <title>Leaderboards</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -40,7 +40,7 @@
 </head>
 <body>
 @include('layouts.partials.navbar')
- <h1>All of the guilds:</h1>
+ <h1>Leaderboards</h1>
 <?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
  <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
@@ -48,26 +48,26 @@
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Search Guilds</div>
+    <div class="panel-heading">Choose leaderboard:</div>
     <div class="panel-body">
      <div class="form-group">
-      <input type="text" name="search" id="search" class="form-control" placeholder="Begin inputting the name of the guild..." />
-      <select id="sort">
-  <option value="actual value 1">MembersDesc</option>
-  <option value="actual value 2">MembersAsc</option>
-  <option value="actual value 3">Alfabetically</option>
+          <select id="sort">
+  <option value="actual value 1">Level</option>
+  <option value="actual value 2">Strength</option>
+  <option value="actual value 3">Duels</option>
 </select>
      </div>
      <div class="table-responsive">
       <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
       <table class="table table-striped table-bordered">
        <thead>
-        <tr>
-         <th>Guild Name</th>
-         <th>Members</th>
-         <th>Description</th>
-         <th>Is open</th>
-         <th>View</th>
+       <tr>
+         <th>Name</th>
+         <th>Guild</th>
+         <th>Strength</th>
+         <th>Level</th>
+         <th>DuelsWon</th>
+         <th>Ask for a duel</th>
         </tr>
        </thead>
        <tbody>
@@ -79,43 +79,34 @@
   </div>
   <br>
   @auth
-  @if($character && $character->guild_id==NULL)
+  @if($character)
+
  <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">Create a new guild</a>
- @elseif ($character && $character->guild_id!=NULL)
- Your guild: <?php $guild = Guild::findOrFail($character->guild_id); ?>{{$guild->name}}
- <a href="{{$guild->id}}/guild" class="btn btn-outline-light play_as">Press here to view</a>
+ 
  @endif
  @endauth
  </div>
 
 </body>
 </html>
-
 <script>
 $(document).ready(function(){
- fetch_guild_data();
- function fetch_guild_data(searchValue = '', sortValue = ''){
+ fetch_character_data();
+ function fetch_character_data(sortValue = ''){
   $.ajax({
-   url:"{{ route('guild_search.action') }}",
+   url:"{{ route('live_search.action') }}",
    method:'GET',
-   data: {searchValue: searchValue,
-    sortValue: sortValue
-  },
+   data:{sortValue:sortValue},
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
-    $('#total_records').text(data.total_data);
    }
   })
  }
- var sortValue; var searchValue;
+
  $("#sort").change(function () {
         sortValue = $("#sort :selected").text()
-        fetch_guild_data(searchValue, sortValue);
+        fetch_character_data(sortValue);
     });
- $(document).on('keyup', '#search', function(){
-  searchValue = $(this).val();
-  fetch_guild_data(searchValue, sortValue);
- });
 });
 </script>

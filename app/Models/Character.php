@@ -18,4 +18,7 @@ class Character extends Model
     public function encounter(){
         return $this->hasMany(Encounter::class);
     }
+    public function flaggedobject(){
+        return $this->hasMany(FlaggedObject::class);
+    }
 }

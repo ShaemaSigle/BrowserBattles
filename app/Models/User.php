@@ -16,6 +16,9 @@ class User extends Authenticatable
     public function character(){
         return $this->hasMany(Character::class);
     }
+    public function flaggedobject(){
+        return $this->hasMany(FlaggedObject::class);
+    }
     /**
      * The attributes that are mass assignable.
      *
