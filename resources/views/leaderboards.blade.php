@@ -62,6 +62,7 @@
       <table class="table table-striped table-bordered">
        <thead>
        <tr>
+       <th>Position</th>
          <th>Name</th>
          <th>Guild</th>
          <th>Strength</th>
@@ -80,9 +81,7 @@
   <br>
   @auth
   @if($character)
-
- <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">Create a new guild</a>
- 
+Your position: <div id="position"></div> 
  @endif
  @endauth
  </div>
@@ -100,6 +99,7 @@ $(document).ready(function(){
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
+    $('#position').text(data.pos);
    }
   })
  }
