@@ -176,13 +176,16 @@ ul{
         </div>
         </form>
         <div class="form-group form-floating mb-3">
-        <form style="float: left; margin-top: -10vh;" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+        <form style="float: left; margin-top: -10vh;"  class="profile-form"  action={{ action([App\Http\Controllers\UserController::class, 'update'], 
         [ 'user' => $user]) }} method="POST" enctype="multipart/form-data">
           @csrf
           @method('put')
           <label for="ProfPic">Upload a new Profile Picture</label>
           <input type="file" name="image" class="form-control">
-          <button type="submit" class="btn btn-success">Upload</button>
+          @if ($errors->has('image'))
+                <span class="text-danger text-left">{{ $errors->first('image') }}</span>
+            @endif
+          <button type="submit">Upload</button>
       </form></div>
 <form class="blankitNoFloat" method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $user->id) }}">
     @csrf

@@ -81,7 +81,7 @@
   <br>
   @auth
   @if($character)
-Your position: <div id="position"></div> 
+Your position: <b id="position"></b> 
  @endif
  @endauth
  </div>
