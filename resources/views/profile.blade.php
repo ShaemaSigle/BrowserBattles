@@ -195,4 +195,9 @@ ul{
 </div>
 @endauth
 </body>
+@auth 
+@if($user->role=='admin')
+@include('layouts.partials.adminNavbar')
+@endif
+@endauth
 </html>

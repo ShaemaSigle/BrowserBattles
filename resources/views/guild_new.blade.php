@@ -41,4 +41,9 @@ button:hover {
  <button type="submit" value="Add">Save</button>
  </form>
 </body>
+@auth 
+@if($user->role=='admin')
+@include('layouts.partials.adminNavbar')
+@endif
+@endauth
 </html>

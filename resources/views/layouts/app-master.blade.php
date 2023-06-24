@@ -83,4 +83,11 @@ window.addEventListener('scroll', function() {
 <div id="copyright">Copyright 2023 - All rights reserved</div>
 </section>
 </body>
+
+@auth 
+<?php $user=Auth::user(); ?>
+@if($user->role=='admin')
+@include('layouts.partials.adminNavbar')
+@endif
+@endauth
 </html>

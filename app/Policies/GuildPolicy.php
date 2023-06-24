@@ -16,9 +16,17 @@ class GuildPolicy
         //
     }
     public function update(User $user, Guild $guild){
-        return $user->id === $guild->owner;
+        return $user->active_character_id === $guild->owner;
     }
     public function destroy(User $user, Guild $guild){
-        return $user->active_character_id == $guild->owner;
+        return ($user->active_character_id == $guild->owner || $user->role=='admin');
+    }
+    public function join(User $user){
+        $char = Character::findOrFail($user->active_character_id);
+        return($char->guild_id == NULL);
+    }
+    public function leave(User $user, Guild $guild){
+        $char = Character::findOrFail($user->active_character_id);
+        return ($char->guild_id == $guild->id && $char->id != $guild->owner);
     }
 }

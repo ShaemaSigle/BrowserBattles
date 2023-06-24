@@ -38,6 +38,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::get('guilds/create', [GuildController::class,'create']);
         Route::get('characters/create', [CharacterController::class,'create']);
         Route::put('{id}/guild', [GuildController::class,'join']); //!!!!
+        Route::put('{id}/guild/leave', [GuildController::class,'leave']); //!!!!
         //Route::get('users', [CharacterController::class,'create'])->middleware(RoutingMiddleware::class);
     });
 });

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class GuildController extends Controller
 {
@@ -67,14 +68,20 @@ class GuildController extends Controller
     
     public function join($id){ //it also manages leaving
         $guild = Guild::findOrFail($id);
-        $user = Auth::user();
-        $character = Character::findOrFail($user->active_character_id);
-        if($character->guild_id == NULL) {
+        $character = Character::findOrFail(Auth::user()->active_character_id);
+        if(Gate::allows('join-guild', $guild)){
             $character->guild_id = $id; 
             $guild->members_amount +=1;
             $guild->save();
         }
-        else if($character->guild_id == $id && $character->id != $guild->owner){
+        $character->save();
+        $guild->save();
+        return redirect($id.'/guild');
+    }
+    public function leave($id){
+        $guild = Guild::findOrFail($id);
+        $character = Character::findOrFail(Auth::user()->active_character_id);
+        if(Gate::allows('leave-guild', $guild)){
             $character->guild_id = NULL;
             $character->save();
             $guild->members_amount -=1;
@@ -94,12 +101,19 @@ class GuildController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $guild)
+    public function destroy(string $id)
     {
-       // if (Gate::denies('is-admin')) {  return redirect('dashboard') ->withErrors('Access denied');} 
-        $guild = Guild::findOrFail($guild);
-        $guild->delete();
-        return redirect("/guilds");
+        $guild = Guild::findOrFail($id);
+        if (Gate::allows('delete-guild', $guild)) {
+            $characters = Character::Where('guild_id', '=', $id)->get();
+            foreach($characters as $char){
+                $char->guild_id = NULL;
+                $char->save();
+            }
+            $guild->delete();
+            return redirect("/guilds");
+        } 
+        else return redirect("/guilds")->withErrors('Access denied');
     }
 
     function list_members(Request $request, $id){

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('owner');
             $table->string('members_amount');
             $table->string('icon_path');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('isopen');
             $table->timestamps();
         });

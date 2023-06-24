@@ -85,8 +85,13 @@ Your position: <b id="position"></b>
  @endif
  @endauth
  </div>
-
+ @auth 
+@if($user->role=='admin')
+@include('layouts.partials.adminNavbar')
+@endif
+@endauth
 </body>
+
 </html>
 <script>
 $(document).ready(function(){

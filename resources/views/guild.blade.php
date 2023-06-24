@@ -127,23 +127,33 @@ use App\Http\Controllers\GuildController;
 
  @auth
  @if($user->active_character_id)
- <?php $character = Character::where('id', '=', $user->active_character_id)->first(); ?>
-@if($character->id != $guild->owner)
+
+@can('leave-guild', $guild)
+ <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'leave'], ['id' => $guild->id]) }}>
+    @csrf
+    @method('PuT')
+    <button type="submit" class="btn btn-outline-light li-right play_as">Leave guild</button>
+ </form>
+@endcan
+
+@can('join-guild')
  <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'join'], ['id' => $guild->id]) }}>
     @csrf
     @method('PuT')
-    <button type="submit" class="btn btn-outline-light li-right play_as">
-    @if($character->guild_id == NULL)Join guild
-    @elseif($character->guild_id == $guild->id)Leave guild
-    @endif
-    </button>
+    <button type="submit" class="btn btn-outline-light li-right play_as"> Join guild </button>
  </form>
-@endif
+ @endcan
+
  @endif
  @endauth
 </div>
- 
+
 </body>
+@auth 
+@if($user->role=='admin')
+@include('layouts.partials.adminNavbar')
+@endif
+@endauth
 </html>
 <script>
 $(document).ready(function(){
