@@ -31,7 +31,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
     //Routes for authenticated users only
     Route::group(['middleware' => ['auth']], function() {
         Route::get('/logout', 'LogoutController@perform')->name('logout.perform');
-        Route::get('game', [GameController::class, 'index']);//->middleware(RoutingMiddleware::class);
+        Route::get('game', [GameController::class, 'index']);
         Route::get('game/encounter/{id}', [EncounterController::class,'show']);
         Route::get('profile', [UserController::class,'show']);
         Route::get('guilds/create', [GuildController::class,'create']);
@@ -39,7 +39,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::put('{id}/guild', [GuildController::class,'join']); //!!!!
         Route::put('{id}/guild/leave', [GuildController::class,'leave']); //!!!!
         Route::get('users', [UserController::class,'index'])->middleware('ensure.role:userlist');
-        Route::get('/users/search', 'UserController@search')->name('user_search.action');
+        Route::get('users/{id}', [UserController::class,'show'])->middleware('ensure.role:userlist');
+        Route::get('/users/search', 'UserController@search')->name('user_search.action')->middleware('ensure.role:userlist');
     });
 });
 

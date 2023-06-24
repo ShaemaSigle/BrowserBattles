@@ -22,7 +22,7 @@ class RoutingMiddleware
         //if ($user->role == 'user'){
         //    return $next($request);
         //}
-        if($route == 'userslist' && $user->hasRole('admin')) return $next($request);
+        if($route == 'userlist' && $user->role == 'admin') return $next($request);
         return redirect('/');
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>All guilds</title>
+ <title>User list</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -40,7 +40,7 @@
 </head>
 <body>
 @include('layouts.partials.navbar')
- <h1>All of the guilds:</h1>
+ <h1>All of the users:</h1>
 <?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
  <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
@@ -48,15 +48,11 @@
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Search Guilds</div>
+    <div class="panel-heading">Search Users</div>
     <div class="panel-body">
      <div class="form-group">
-      <input type="text" name="search" id="search" class="form-control" placeholder="Begin inputting the name of the guild..." />
-      <select id="sort">
-  <option value="actual value 1">MembersDesc</option>
-  <option value="actual value 2">MembersAsc</option>
-  <option value="actual value 3">Alfabetically</option>
-</select>
+      <input type="text" name="search" id="search" class="form-control" placeholder="Begin inputting the name of the user..." />
+
      </div>
      <div class="table-responsive">
       <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
@@ -79,6 +75,7 @@
    </div>
   </div>
   <br>
+ Total users: <b id="total_records"> </b>
  </div>
 
 </body>
@@ -103,7 +100,7 @@ $(document).ready(function(){
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
-    //$('#total_records').text(data.total_data);
+    $('#total_records').text(data.total_data);
    }
   })
  }

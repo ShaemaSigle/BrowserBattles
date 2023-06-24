@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>My profile</title>
+ <title>{{$user->username}}'s profile</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
     <style>
@@ -77,7 +77,7 @@ ul{
 <body>
 @include('layouts.partials.navbar')
  <h1>@auth <?php 
-    $user = Auth::user(); 
+    //$user = Auth::user(); 
     if($user->profpic_path != NULL) $image =  $user->profpic_path;
     else $image = 'default_knight.png';
  ?> 
@@ -90,14 +90,14 @@ ul{
     <strong>Name:</strong> {{$user->username}}<br>
     <strong>Your Role:</strong> {{$user->role}}<br>
     <div style="float: right; margin-top: -20vh; text-align:right;"> 
-    Here's your profile picture!   
+    Profile picture   
     </div><br>
       <div style="float: right; margin-top: -20vh; text-align:right;"> 
   <img src="{{asset('assets/img/'.$image)}}" alt="" height="250px" width="250px">
     </div>
     <br>
     @if (count($characters) == 0)
- You don't have any characters!
+ No characters found!
  @else
  <ul>
  <h3 style="padding-left: 0;">Your characters:</h3>
@@ -124,11 +124,11 @@ ul{
  @endif
  <br>
  <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">Create a new character</a>
-<br><br><hr><br>Here you can edit your account.
+<br><br><hr><br>Here you can edit this account.
 <br> <br>
 
     <div style="float: left;" class="form-group form-floating mb-3">
-    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
         [ 'user' => $user]) }}>
         @csrf
         @method('put')
@@ -141,7 +141,7 @@ ul{
     </form>
         </div>
     <div style="float: left;" class="form-group form-floating mb-3">
-    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
         [ 'user' => $user]) }}>
         @csrf
         @method('put')
@@ -154,7 +154,7 @@ ul{
     </form>
         </div>
         
-        <form style="float: left;" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+        <form style="float: left;" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
         [ 'user' => $user]) }}>
         @csrf
         @method('put')
@@ -176,7 +176,7 @@ ul{
         </div>
         </form>
         <div class="form-group form-floating mb-3">
-        <form style="float: left; margin-top: -10vh;"  class="profile-form"  action={{ action([App\Http\Controllers\UserController::class, 'update'], 
+        <form style="float: left; margin-top: -10vh;"  class="profile-form"  action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
         [ 'user' => $user]) }} method="POST" enctype="multipart/form-data">
           @csrf
           @method('put')

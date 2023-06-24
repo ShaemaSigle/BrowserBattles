@@ -50,7 +50,7 @@ class UserController extends Controller
         if($userID=='')$user = Auth::user(); //check with middleware later
         else $user = User::findOrFail($userID);
         $characters = Character::where('user_id', '=', $user->id)->get();
-        return view('profile', ['characters' => $characters]);
+        return view('profile', ['characters' => $characters, 'user' => $user]);
     }
 
     /**
@@ -64,9 +64,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, $userID = '')
     {
-        $user = Auth::user();
+        if($userID=='')$user = Auth::user(); //check with middleware later
+        else $user = User::findOrFail($userID);
         if($request->username != NULL){
             $validator = Validator::make($request->all(), [
                 'username' => 'required|unique:users,username'
@@ -175,7 +176,7 @@ class UserController extends Controller
       else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
       $data = array(
        'table_data'  => $output,
-       //'total_data'  => $total_row
+       'total_data'  => $total_row
       );
 
       echo json_encode($data);
