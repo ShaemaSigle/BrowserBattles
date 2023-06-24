@@ -8,16 +8,21 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    public function hasRole($role)
+    {
+        return Auth::user()->role == $role;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
        // $users = User::all();
-        return view('home');
+        return view('users');
         //return view('users', compact('users'));
     }
 
@@ -40,9 +45,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show($userID = '')
     {
-        $user = Auth::user();
+        if($userID=='')$user = Auth::user(); //check with middleware later
+        else $user = User::findOrFail($userID);
         $characters = Character::where('user_id', '=', $user->id)->get();
         return view('profile', ['characters' => $characters]);
     }
@@ -107,5 +113,72 @@ class UserController extends Controller
         app('App\Http\Controllers\LogoutController')->perform();
         User::findOrfail($id)->delete();
         return redirect("/");
+    }
+
+    function search(Request $request){
+    if($request->ajax()){
+        //dd("sorting"); НЕ ЮЗАЙ ЭТУ ХУЙНЮ, В ПРОШЛЫЙ РАЗ ПОЛЧАСА ЕБАЛАСЬ, ЧТОБЫ ПОНЯТЬ, ПОЧЕМУ ВСЁ ВДРУГ СЛОМАЛОСЬ
+        $query = $request->get('searchValue');
+        $output = '';
+        $orderByAD = '';
+        $orderBy = '';
+        $sortingParam = ''; //$request->get('sortValue');
+        if($sortingParam != ''){
+            if($sortingParam=='MembersAsc'){
+                $orderByAD = 'ASC';
+                $orderBy = 'members_amount';
+           } 
+            if($sortingParam=='MembersDesc'){
+                $orderByAD= 'DESC';
+                $orderBy = 'members_amount';
+            }
+            if($sortingParam=='Alfabetically'){
+                $orderByAD= 'ASC';
+                $orderBy = 'name';
+            }
+        }
+        if($query != ''){
+            $data = DB::table('users')->where('username', 'like', '%'.$query.'%')->orderBy('id', 'ASC')->get();
+        }
+        else $data =  DB::table('users')->orderBy('id', 'ASC')->get(); 
+
+        // if($query != '' && $sortingParam != ''){
+        //     $data = DB::table('users')->where('username', 'like', '%'.$query.'%')->orderBy($orderBy, $orderByAD)->get();
+        //      //  ->orWhere('Address', 'like', '%'.$query.'%')
+        //    }
+        //    else if($orderByAD != ''){
+        //     $data = DB::table('guilds')->orderBy($orderBy, $orderByAD)->get();
+        //    }
+        //    else if($query != ''){
+        //      $data = DB::table('guilds')->where('name', 'like', '%'.$query.'%')->get();
+        //    }
+        //    else $data =  DB::table('guilds')->orderBy('id', 'desc')->get(); 
+      $total_row = $data->count();
+      if($total_row > 0){
+       foreach($data as $row){
+        $output .= '
+        <tr>
+         <td>'.$row->id.'</td>
+         <td>'.$row->username.'</td>
+         <td>'.$row->email.'</td>
+         <td>'.$row->role.'</td>
+         <td>
+         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">Press here to view</a>
+         </td>
+         <td>
+         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">DELETE</a>
+         </td>
+        </tr>
+        ';
+       }
+      }
+      else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+      $data = array(
+       'table_data'  => $output,
+       //'total_data'  => $total_row
+      );
+
+      echo json_encode($data);
+     }
     }
 }

@@ -48,10 +48,10 @@
       <ul class="nav">
         <li><a href="{{action([App\Http\Controllers\HomeController::class, 'index'])}}" class="nav-link px-2 text-secondary">Home</a></li>
         @auth <?php $user = Auth::user(); ?>
-        <li><a href="{{action([App\Http\Controllers\UserController::class, 'show'])}}" class="nav-link px-2 text-white">Profile</a></li>
+        <li><a href="/profile" class="nav-link px-2 text-white">Profile</a></li>
         <li><a href="{{action([App\Http\Controllers\GameController::class, 'index'])}}" class="nav-link px-2 text-white">Game</a></li>
         @endauth
-        <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">Guild</a></li>
+        <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">Guilds</a></li>
         <li><a href="/leaderboards" class="nav-link px-2 text-white">Leaderboards</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Suggest</a></li>
       </ul>

@@ -63,11 +63,12 @@
       <table class="table table-striped table-bordered">
        <thead>
         <tr>
-         <th>Guild Name</th>
-         <th>Members</th>
-         <th>Description</th>
-         <th>Is open</th>
-         <th>View</th>
+        <th>ID</th>
+         <th>Username</th>
+         <th>Email</th>
+         <th>Role</th>
+         <th>Profile</th>
+         <th>DELETE</th>
         </tr>
        </thead>
        <tbody>
@@ -78,14 +79,6 @@
    </div>
   </div>
   <br>
-  @auth
-  @if($character && $character->guild_id==NULL)
- <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">Create a new guild</a>
- @elseif ($character && $character->guild_id!=NULL)
- Your guild: <?php $guild = Guild::findOrFail($character->guild_id); ?>{{$guild->name}}
- <a href="{{$guild->id}}/guild" class="btn btn-outline-light play_as">Press here to view</a>
- @endif
- @endauth
  </div>
 
 </body>
@@ -96,12 +89,13 @@
 @endauth
 </html>
 
+
 <script>
 $(document).ready(function(){
- fetch_guild_data();
- function fetch_guild_data(searchValue = '', sortValue = ''){
+ fetch_user_data();
+ function fetch_user_data(searchValue = '', sortValue = ''){
   $.ajax({
-   url:"{{ route('guild_search.action') }}",
+   url:"{{ route('user_search.action') }}",
    method:'GET',
    data: {searchValue: searchValue,
     sortValue: sortValue
@@ -109,18 +103,18 @@ $(document).ready(function(){
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
-    $('#total_records').text(data.total_data);
+    //$('#total_records').text(data.total_data);
    }
   })
  }
  var sortValue; var searchValue;
  $("#sort").change(function () {
         sortValue = $("#sort :selected").text()
-        fetch_guild_data(searchValue, sortValue);
+        fetch_user_data(searchValue, sortValue);
     });
  $(document).on('keyup', '#search', function(){
   searchValue = $(this).val();
-  fetch_guild_data(searchValue, sortValue);
+  fetch_user_data(searchValue, sortValue);
  });
 });
 </script>

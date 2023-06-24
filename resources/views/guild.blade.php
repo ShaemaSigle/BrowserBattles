@@ -115,12 +115,13 @@ use App\Http\Controllers\GuildController;
    Owner: {{$owner->name}}
 </div>
 
+
   @can('destroy', $guild)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'destroy'], [ 'guild' => $guild->id]) }}>
     <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
     @csrf
     @method('DELETE')
-    <button type="submit" class="btn btn-outline-light li-right play_as">Delete guild</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to delete this account?')">Delete guild</button>
  </form>
  @endcan
  <h1 class="flying">{{$guild->name}}</h1>
@@ -132,7 +133,7 @@ use App\Http\Controllers\GuildController;
  <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'leave'], ['id' => $guild->id]) }}>
     @csrf
     @method('PuT')
-    <button type="submit" class="btn btn-outline-light li-right play_as">Leave guild</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to leave this guild?')">Leave guild</button>
  </form>
 @endcan
 

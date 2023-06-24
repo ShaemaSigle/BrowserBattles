@@ -9,18 +9,17 @@ use App\Http\Controllers\CharacterController;
 use App\Http\Middleware\RoutingMiddleware;
 
 Route::redirect('/', 'users');
-Route::resource('users', UserController::class);
+//
 
-//Routes available to everyone
-Route::get('guilds', [GuildController::class,'index']);
-Route::get('{id}/guild', [GuildController::class,'show']);
-Route::get('/guilds/action', [GuildController::class,'action'])->name('guild_search.action');
-Route::get('{id}/guild/list_members', [GuildController::class,'list_members'])->name('list_members.action');
-Route::view('/leaderboards', 'leaderboards');
-Route::get('/leaderboards/live', [CharacterController::class,'live'])->name('live_search.action');
 
-//Routes available to certain roles
 Route::group(['namespace' => 'App\Http\Controllers'], function(){ 
+    //Routes available to everyone
+    Route::get('guilds', [GuildController::class,'index']);
+    Route::get('{id}/guild', [GuildController::class,'show']);
+    Route::get('/guilds/action', [GuildController::class,'action'])->name('guild_search.action');
+    Route::get('{id}/guild/list_members', [GuildController::class,'list_members'])->name('list_members.action');
+    Route::view('/leaderboards', 'leaderboards');
+    Route::get('/leaderboards/live', [CharacterController::class,'live'])->name('live_search.action');
     Route::get('/', 'HomeController@index')->name('home.index');
     //Routes for guests only
     Route::group(['middleware' => ['guest']], function() {
@@ -39,15 +38,17 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::get('characters/create', [CharacterController::class,'create']);
         Route::put('{id}/guild', [GuildController::class,'join']); //!!!!
         Route::put('{id}/guild/leave', [GuildController::class,'leave']); //!!!!
-        //Route::get('users', [CharacterController::class,'create'])->middleware(RoutingMiddleware::class);
+        Route::get('users', [UserController::class,'index'])->middleware('ensure.role:userlist');
+        Route::get('/users/search', 'UserController@search')->name('user_search.action');
     });
 });
-
-Route::fallback(function () {
-    return view('oops');
-})->name('fallback');
 
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
 Route::resource('character', CharacterController::class, ['except' =>['index', 'create']]);
 Route::resource('encounter', EncounterController::class, ['except' =>['index', 'create']]);
+Route::resource('users', UserController::class, ['except' =>['index', 'search']]);
+
+Route::fallback(function () {
+    return view('oops');
+})->name('fallback');
 

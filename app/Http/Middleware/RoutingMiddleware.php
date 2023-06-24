@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 class RoutingMiddleware
@@ -15,12 +15,14 @@ class RoutingMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, /*$route*/): Response
+    public function handle(Request $request, Closure $next, $route): Response
     {
         $user = Auth::user();
-        if ($user->role == 'user'){
-            return $next($request);
-        }
-        return redirect()->back()->with('flash_message','you are not allowed to access this');
+        //dd($route);
+        //if ($user->role == 'user'){
+        //    return $next($request);
+        //}
+        if($route == 'userslist' && $user->hasRole('admin')) return $next($request);
+        return redirect('/');
     }
 }
