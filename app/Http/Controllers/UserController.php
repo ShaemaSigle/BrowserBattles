@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -49,8 +50,11 @@ class UserController extends Controller
     {
         if($userID=='')$user = Auth::user(); //check with middleware later
         else $user = User::findOrFail($userID);
-        $characters = Character::where('user_id', '=', $user->id)->get();
-        return view('profile', ['characters' => $characters, 'user' => $user]);
+        if(Gate::allows('show-user', $user)){
+            $characters = Character::where('user_id', '=', $user->id)->get();
+            return view('profile', ['characters' => $characters, 'user' => $user]);
+        }
+        else redirect('profile');
     }
 
     /**
@@ -66,43 +70,45 @@ class UserController extends Controller
      */
     public function update(Request $request, $userID = '')
     {
-        if($userID=='')$user = Auth::user(); //check with middleware later
+        if($userID=='')$user = Auth::user();
         else $user = User::findOrFail($userID);
-        if($request->username != NULL){
-            $validator = Validator::make($request->all(), [
-                'username' => 'required|unique:users,username'
-            ]);
-            if($validator->passes())$user->username = $request->username;
-            else return redirect('profile')->withErrors($validator);
-        } 
-        if($request->email != NULL){
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email:rfc,dns|unique:users,email'
-            ]);
-            if($validator->passes())$user->email = $request->email;
-            else return redirect('profile')->withErrors($validator);
-        } 
-        if($request->password != NULL || $request->confirm_password != NULL){
-            $validator = Validator::make($request->all(), [
-                'password' => 'required|min:8',
-                'password_confirmation' => 'required|same:password'
-            ]);
-            if($validator->passes())$user->password=$request->password;
-            else return redirect('profile')->withErrors($validator);
-        } 
-        if($request->image != NULL){
-            $validator = Validator::make($request->all(), [
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ]);
-            if($validator->passes()){
-                $imageName = time().'.'.$request->image->extension();
-                $request->image->move(public_path('\assets\img'), $request->image->getClientOriginalName());
-                $user->profpic_path=$request->image->getClientOriginalName();
-            }
-            else return redirect('profile')->withErrors($validator);
-        } 
-        if($request->active_character_id != NULL) $user->active_character_id=$request->active_character_id;
-        $user->save();
+        if(Gate::allows('update-user', $user)){
+            if($request->username != NULL){
+                $validator = Validator::make($request->all(), [
+                    'username' => 'required|unique:users,username'
+                ]);
+                if($validator->passes())$user->username = $request->username;
+                else return redirect('profile')->withErrors($validator);
+            } 
+            if($request->email != NULL){
+                $validator = Validator::make($request->all(), [
+                    'email' => 'required|email:rfc,dns|unique:users,email'
+                ]);
+                if($validator->passes())$user->email = $request->email;
+                else return redirect('profile')->withErrors($validator);
+            } 
+            if($request->password != NULL || $request->confirm_password != NULL){
+                $validator = Validator::make($request->all(), [
+                    'password' => 'required|min:8',
+                    'password_confirmation' => 'required|same:password'
+                ]);
+                if($validator->passes())$user->password=$request->password;
+                else return redirect('profile')->withErrors($validator);
+            } 
+            if($request->image != NULL){
+                $validator = Validator::make($request->all(), [
+                    'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                ]);
+                if($validator->passes()){
+                    $imageName = time().'.'.$request->image->extension();
+                    $request->image->move(public_path('\assets\img'), $request->image->getClientOriginalName());
+                    $user->profpic_path=$request->image->getClientOriginalName();
+                }
+                else return redirect('profile')->withErrors($validator);
+            } 
+            if($request->active_character_id != NULL) $user->active_character_id=$request->active_character_id;
+            $user->save();
+        }
         return redirect('profile');
     }
 
@@ -111,9 +117,19 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        app('App\Http\Controllers\LogoutController')->perform();
-        User::findOrfail($id)->delete();
-        return redirect("/");
+        $user = User::findOrfail($id);
+        if(Gate::allows('delete-user', $user)){
+            if(Auth::user()->id == $user->id) {
+                app('App\Http\Controllers\LogoutController')->perform();
+                $user->delete();
+                return redirect("/register");
+            }
+            else{
+                $user->delete();
+                return redirect("/users");
+            }
+        } 
+        
     }
 
     function search(Request $request){
@@ -167,7 +183,7 @@ class UserController extends Controller
          <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">Press here to view</a>
          </td>
          <td>
-         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">DELETE</a>
+         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">FLAG</a>
          </td>
         </tr>
         ';

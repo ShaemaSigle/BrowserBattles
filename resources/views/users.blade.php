@@ -64,7 +64,7 @@
          <th>Email</th>
          <th>Role</th>
          <th>Profile</th>
-         <th>DELETE</th>
+         <th>FLAG</th>
         </tr>
        </thead>
        <tbody>

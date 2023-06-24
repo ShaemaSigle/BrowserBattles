@@ -123,8 +123,10 @@ ul{
  </ul>
  @endif
  <br>
+ @if($user->id == Auth::user()->id)
  <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">Create a new character</a>
-<br><br><hr><br>Here you can edit this account.
+@endif
+ <br><br><hr><br>Here you can edit this account.
 <br> <br>
 
     <div style="float: left;" class="form-group form-floating mb-3">

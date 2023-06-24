@@ -39,9 +39,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::put('{id}/guild', [GuildController::class,'join']); //!!!!
         Route::put('{id}/guild/leave', [GuildController::class,'leave']); //!!!!
         Route::get('users', [UserController::class,'index'])->middleware('ensure.role:userlist');
+        Route::get('/users/search', [UserController::class,'search'])->name('user_search.action')->middleware('ensure.role:userlist');
+
         Route::get('users/{id}', [UserController::class,'show'])->middleware('ensure.role:userlist');
-        Route::get('/users/search', 'UserController@search')->name('user_search.action')->middleware('ensure.role:userlist');
-    });
+            });
 });
 
 Route::resource('guild', GuildController::class, ['except' =>['index', 'create']]);
