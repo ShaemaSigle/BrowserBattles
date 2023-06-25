@@ -29,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('join-guild', [GuildPolicy::class, 'join']);
         Gate::define('leave-guild', [GuildPolicy::class, 'leave']);
         Gate::define('update-guild', [GuildPolicy::class, 'update']);
+        Gate::define('create-guild', [GuildPolicy::class, 'create']);
         Gate::define('update-user', [UserPolicy::class, 'update']);
         Gate::define('delete-user', [UserPolicy::class, 'destroy']);
         Gate::define('show-user', [UserPolicy::class, 'show']);

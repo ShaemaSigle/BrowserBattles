@@ -27,7 +27,8 @@ class GuildController extends Controller
      */
     public function create()
     {
-        return view('guild_new');
+        if(Gate::allows('create-guild')) return view('guild_new');
+        else return redirect('/guilds');
     }
 
     /**
@@ -78,6 +79,7 @@ class GuildController extends Controller
         $guild->save();
         return redirect($id.'/guild');
     }
+    
     public function leave($id){
         $guild = Guild::findOrFail($id);
         $character = Character::findOrFail(Auth::user()->active_character_id);

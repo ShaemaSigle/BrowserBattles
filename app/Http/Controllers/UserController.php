@@ -58,14 +58,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $userID = '')
@@ -155,7 +147,7 @@ class UserController extends Controller
             }
         }
         if($query != ''){
-            $data = DB::table('users')->where('username', 'like', '%'.$query.'%')->orderBy('id', 'ASC')->get();
+            $data = DB::table('users')->where('username', 'like', '%'.$query.'%')->orWhere('id', 'like', '%'.$query.'%')->orderBy('id', 'ASC')->get();
         }
         else $data =  DB::table('users')->orderBy('id', 'ASC')->get(); 
 
@@ -181,9 +173,6 @@ class UserController extends Controller
          <td>'.$row->role.'</td>
          <td>
          <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">Press here to view</a>
-         </td>
-         <td>
-         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">FLAG</a>
          </td>
         </tr>
         ';

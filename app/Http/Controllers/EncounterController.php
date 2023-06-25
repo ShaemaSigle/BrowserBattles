@@ -41,7 +41,6 @@ class EncounterController extends Controller
         $encounter->enemy_id = rand(1, 5);
         $encounter->save();
         return view('encounter', compact('encounter'));
-        //return redirect('game/encounter/'.$encounter->id)->with([ 'encounter' => $encounter ]);
     }
 
     /**
@@ -50,9 +49,10 @@ class EncounterController extends Controller
     public function show(string $id)
     {
         $encounter = Encounter::findOrFail($id);
+        $character = Character::findOrFail(Auth::user()->active_character_id);
         //If the targeted encounter already has a result, it should not be loaded
-        if($encounter->result != NULL) return redirect('game');
-        else return view('encounter', ['encounter' => $encounter]);
+        if($encounter->result == NULL && $character->id == $encounter->character_id) return view('encounter', ['encounter' => $encounter]);
+        else return redirect('game');
     }
 
     /**

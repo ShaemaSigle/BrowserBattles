@@ -115,7 +115,7 @@ use App\Http\Controllers\GuildController;
    Owner: {{$owner->name}}
 </div>
 
-
+@if($user->role != 'admin')
   @can('destroy', $guild)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'destroy'], [ 'guild' => $guild->id]) }}>
     <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
@@ -124,6 +124,7 @@ use App\Http\Controllers\GuildController;
     <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to delete this account?')">Delete guild</button>
  </form>
  @endcan
+ @endif
  <h1 class="flying">{{$guild->name}}</h1>
 
  @auth

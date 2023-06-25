@@ -10,9 +10,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use SebastianBergmann\LinesOfCode\Counter;
 
-class FlaggedController extends Controller
+class FlaggedObjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,7 +27,7 @@ class FlaggedController extends Controller
      */
     public function create()
     {
-        return view('character_new');
+        //return view('flag_new');
     }
 
     /**
@@ -36,14 +35,13 @@ class FlaggedController extends Controller
      */
     public function store(Request $request)
     {
-        $character = new Character();
-        $character->name = $request->name;
-        $character->user_id = $request->user_id;
-        $character->level=1;
-        $character->guild_id = NULL;
-        $character->duelsWon = 0;
-        $character->strength = 150;
-        $character->save();
+        $flag = new FlaggedObject();
+        $object = NULL;
+        if($request->guild_id != NULL) $flag->object_id_guild = $request->guild_id;
+        if($request->character_id != NULL) $flag->object_id_character = $request->character_id;
+        if($request->user_id != NULL) $flag->object_id_user = $request->user_id;
+        $flag->reason = $request->reason;
+        $flag->save();
         return redirect('profile');
     }
 

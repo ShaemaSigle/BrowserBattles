@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>User list</title>
+ <title>Flagged objects</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -40,7 +40,7 @@
 </head>
 <body>
 @include('layouts.partials.navbar')
- <h1>All of the users:</h1>
+ <h1>All of the flagged objects:</h1>
 <?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
  <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
@@ -48,10 +48,10 @@
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Search Users</div>
+    <div class="panel-heading">Search Objects</div>
     <div class="panel-body">
      <div class="form-group">
-      <input type="text" name="search" id="search" class="form-control" placeholder="Username or id" />
+      <input type="text" name="search" id="search" class="form-control" placeholder="Give me some letters" />
 
      </div>
      <div class="table-responsive">
@@ -59,11 +59,11 @@
       <table class="table table-striped table-bordered">
        <thead>
         <tr>
-        <th>ID</th>
-         <th>Username</th>
-         <th>Email</th>
-         <th>Role</th>
-         <th>Profile</th>
+        <th>Object Type</th>
+         <th>Name</th>
+         <th>ID</th>
+         <th>Reason</th>
+         <th>View</th>
         </tr>
        </thead>
        <tbody>

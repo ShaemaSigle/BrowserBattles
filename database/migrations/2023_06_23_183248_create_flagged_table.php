@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('flagged', function (Blueprint $table) {
+        Schema::create('flagged_objects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('object_id_user');
-            $table->foreignId('object_id_character');
-            $table->foreignId('object_id_guild');
+            $table->foreignId('object_id_user')->nullable();
+            $table->foreignId('object_id_character')->nullable();
+            $table->foreignId('object_id_guild')->nullable();
             $table->string('reason');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('flagged');
+        Schema::dropIfExists('flagged_objects');
     }
 };
