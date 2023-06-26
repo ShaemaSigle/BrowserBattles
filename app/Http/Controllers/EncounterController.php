@@ -28,6 +28,7 @@ class EncounterController extends Controller
     }
     public function duel($enemy_char_id)
     {
+        if(Auth::user()->active_character_id == NULL) return redirect('game/0');
         $enemy = Character::findOrFail($enemy_char_id);
         return view('encounter', ['enemy' => $enemy]);
     }

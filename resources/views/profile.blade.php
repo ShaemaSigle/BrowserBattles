@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>{{$Wuser->username}}'s profile</title>
+ <title>{{ __('Profile') }} - {{$Wuser->username}}</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
     <style>
@@ -95,54 +95,54 @@ ul{
     else $image = 'default_knight.png';
  ?> 
  
- Wow, it's {{$Wuser->username}}'s profile!</h1>
+ {{$Wuser->username}}</h1>
   <div class="profile-container">
-    <h2>Profile</h2>
+    <h2>{{ __('Profile') }}</h2>
     <br>
-    <strong>Email:</strong> {{$Wuser->email}}<br>
-    <strong>Name:</strong> {{$Wuser->username}}<br>
-    <strong>Role:</strong> {{$Wuser->role}}<br>
+    <strong>{{ __('Email') }}:</strong> {{$Wuser->email}}<br>
+    <strong>{{ __('Username') }}:</strong> {{$Wuser->username}}<br>
+    <strong>{{ __('Role') }}:</strong> {{$Wuser->role}}<br>
     <div style="float: right; margin-top: -20vh; text-align:right;"> 
-    Profile picture   
+    {{ __('Profile picture') }}  
     </div><br>
       <div style="float: right; margin-top: -20vh; text-align:right;"> 
   <img src="{{asset('assets/img/'.$image)}}" alt="" height="250px" width="250px">
     </div>
     <br>
     @if (count($characters) == 0)
- No characters found!
+    {{ __('No characters found!') }}
  @else
  <ul>
- <h3 style="padding-left: 0;">Characters:</h3>
+ <h3 style="padding-left: 0;">{{ __('Characters') }}:</h3>
  @foreach ($characters as $character)
  <li class="character">
     @can('delete-user', $Wuser)
  <form method="POST" class="blankit" action="{{action([App\Http\Controllers\CharacterController::class, 'destroy'],  $character->id) }}">
     @csrf
     @method('DELETE')
-    <button class="btn btn-outline-light li-right play_as" style="background-color: red;" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this character?')">delete</button>
+    <button class="btn btn-outline-light li-right play_as" style="background-color: red;" type="submit" value="delete" onclick="return confirm('{{ addslashes(__('Delete character?')) }}')">{{ __('Delete') }}</button>
     </form>
     @endcan
     @if($Wuser->id != Auth::user()->id)
     @can('index-users')
-    <button style="float: left;" class="btn btn-outline-light li-right play_as showButton">Flag</button>
+    <button style="float: left;" class="btn btn-outline-light li-right play_as showButton">{{ __('Flag') }}</button>
     <form method="POST" class="flagging_form_char" class="blankit" action={{action([App\Http\Controllers\FlaggedObjectController::class, 'store'], [ 'user' => $Wuser->id]) }}>
             <input type="hidden" name="character_id" value="{{ $character->id }}">
-            <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="Enter a reason for flagging">
+            <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter a reason for flagging') }}">
             @csrf
             @method('put')
-            <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">Flag Character</button>
-            <button type="button" id="closeButtonChar" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">Cancel</button>
+            <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Flag Character') }}</button>
+            <button type="button" id="closeButtonChar" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">{{ __('Cancel') }}</button>
         </form>
     @endcan
     @endif
- <div style="margin-top:15px;">{{ $character->name }}: {{ $character->strength }} strength on {{ $character->level }} LVL  @if($character->id != $Wuser->active_character_id)
+ <div style="margin-top:15px;">{{ $character->name }}: {{ $character->strength }} {{ __('strength on') }} {{ $character->level }} LVL  @if($character->id != $Wuser->active_character_id)
  @if($character->user_id == Auth::user()->id)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\UserController::class, 'update'], [ 'user' => $Wuser]) }}>
     <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
     @csrf
     @method('put')
-    <button type="submit" class="btn btn-outline-light li-right play_as">Press to play as</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as">{{ __('Play as') }}</button>
  </form>
  @endif
 </div>
@@ -154,10 +154,10 @@ ul{
  @endif
  <br>
  @if($Wuser->id == Auth::user()->id)
- <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">Create a new character</a>
+ <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">{{ __('Create a new character') }}</a>
 @endif
 @can('delete-user', $Wuser)
- <br><br><hr><br>Here you can edit this account.
+ <br><br><hr><br>{{ __('Here you can edit this account.') }}
 <br> <br>
 
     <div style="float: left;" class="form-group form-floating mb-3">
@@ -179,11 +179,11 @@ ul{
         @csrf
         @method('put')
         <label for="floatingName">Username</label>
-            <input type="name" class="form-control" name="username" value="{{ old('username') }}" placeholder="Username" required="required" autofocus>
+            <input type="name" class="form-control" name="username" value="{{ old('username') }}" placeholder="{{ __('Username') }}" required="required" autofocus>
             @if ($errors->has('username'))
                 <span class="text-danger text-left">{{ $errors->first('username') }}</span>
             @endif
-            <button type="submit">Update Username</button>
+            <button type="submit">{{ __('Update') }}</button>
     </form>
         </div>
         
@@ -192,20 +192,20 @@ ul{
         @csrf
         @method('put')
         <div class="form-group form-floating mb-3">
-        <label for="floatingPassword">Password</label>
-            <input type="password" class="form-control" name="password" value="{{ old('password') }}" placeholder="Password" required="required">
+        <label for="floatingPassword">{{ __('Password') }}</label>
+            <input type="password" class="form-control" name="password" value="{{ old('password') }}" placeholder="{{ __('Password') }}" required="required">
             @if ($errors->has('password'))
                 <span class="text-danger text-left">{{ $errors->first('password') }}</span>
             @endif
         </div>
 
         <div class="form-group form-floating mb-3">
-        <label for="floatingConfirmPassword">Confirm Password</label>
-            <input type="password" class="form-control" name="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="Confirm Password" required="required">
+        <label for="floatingConfirmPassword">{{ __('Confirm Password') }}</label>
+            <input type="password" class="form-control" name="password_confirmation" value="{{ old('password_confirmation') }}" placeholder="{{ __('Confirm Password') }}" required="required">
                     @if ($errors->has('password_confirmation'))
                 <span class="text-danger text-left">{{ $errors->first('password_confirmation') }}</span>
             @endif
-            <button type="submit">Update Password</button>
+            <button type="submit">{{ __('Update') }}</button>
         </div>
         </form>
         <div class="form-group form-floating mb-3">
@@ -213,17 +213,17 @@ ul{
         [ 'user' => $Wuser]) }} method="POST" enctype="multipart/form-data">
           @csrf
           @method('put')
-          <label for="ProfPic">Upload a new Profile Picture</label>
+          <label for="ProfPic">{{ __('Upload a new Profile Picture') }}</label>
           <input type="file" name="image" class="form-control">
           @if ($errors->has('image'))
                 <span class="text-danger text-left">{{ $errors->first('image') }}</span>
             @endif
-          <button type="submit">Upload</button>
+          <button type="submit">{{ __('Upload') }}</button>
       </form></div>
 <form class="blankitNoFloat" method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $Wuser->id) }}">
     @csrf
     @method('DELETE')
-    You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this account?')">delete this account</button>
+    You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('{{ addslashes(__('delete this account')) }}?')">{{ __('delete this account') }}</button>
     </form>
     @endcan
 </div>

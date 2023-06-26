@@ -67,61 +67,61 @@
       z-index: 9995;
     }
   </style>
-
 <div class="Anavbar">
-<div id="overlay"></div>
-  <div class="Acontainer">
-      <ul class="nav">
-        <li><a href="{{action([App\Http\Controllers\UserController::class, 'index'])}}" class="nav-link px-2 text-white sl">Users list</a></li>
-        @can('delete-user')
-        <li><a href="{{action([App\Http\Controllers\FlaggedObjectController::class, 'index'])}}" class="nav-link px-2 text-white sl">Flagged list</a></li>
-        @endcan
-        @if(isset($guild) && $guild->owner != Auth::user()->id)
-          @can('destroy', $guild) 
-            <form method="POST" style="padding-left: 10px; padding-top:8px;" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'destroy'], [ 'guild' => $guild->id]) }}>
-            <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to delete this guild?')">Delete guild</button>
-            </form>
-          @endcan
-          <button id="showButton" style="margin-left: 10px; margin-top:8px;" class="btn btn-outline-light li-right play_as">Flag Guild</button>
-          <form method="POST" id="flagging_form" class="blankit" action={{action([App\Http\Controllers\FlaggedObjectController::class, 'store'], [ 'guild' => $guild->id]) }}>
-            <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
-            <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="Enter a reason for flagging">
-            @csrf
-            @method('put')
-            <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">Flag guild</button>
-            <button type="button" id="closeButton" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">Cancel</button>
-            </form>
-        @endif 
+    <div id="overlay"></div>
+    <div class="Acontainer">
+        <ul class="nav">
+            <li><a href="{{ action([App\Http\Controllers\UserController::class, 'index']) }}" class="nav-link px-2 text-white sl">{{ __('Users List') }}</a></li>
+            @can('delete-user')
+            <li><a href="{{ action([App\Http\Controllers\FlaggedObjectController::class, 'index']) }}" class="nav-link px-2 text-white sl">{{ __('Flagged List') }}</a></li>
+            @endcan
+            @if(isset($guild) && $guild->owner != Auth::user()->id)
+                @can('destroy', $guild) 
+                <form method="POST" style="padding-left: 10px; padding-top:8px;" class="blankit" action="{{ action([App\Http\Controllers\GuildController::class, 'destroy'], ['guild' => $guild->id]) }}">
+                    <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Вы уверены, что хотите удалить эту гильдию?')">{{ __('Delete Guild') }}</button>
+                </form>
+                @endcan
+                <button id="showButton" style="margin-left: 10px; margin-top:8px;" class="btn btn-outline-light li-right play_as">{{ __('Flag Guild') }}</button>
+                <form method="POST" id="flagging_form" class="blankit" action="{{ action([App\Http\Controllers\FlaggedObjectController::class, 'store'], ['guild' => $guild->id]) }}">
+                    <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
+                    <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter reason for flagging') }}">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Flag Guild') }}</button>
+                    <button type="button" id="closeButton" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">{{ __('Cancel') }}</button>
+                </form>
+            @endif 
 
-        @if(isset($Wuser) && $Wuser->id != Auth::user()->id)
-          @can('destroy', $Wuser) 
-            <form method="POST" style="padding-left: 10px; padding-top:8px;" class="blankit" action={{action([App\Http\Controllers\UserController::class, 'destroy'], [ 'user' => $Wuser->id]) }}>
-            <input type="hidden" name="user_id" value="{{ $Wuser->id }}">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to delete this guild?')">Delete User</button>
-            </form>
-          @endcan
-          <button id="showButton" style="margin-left: 10px; margin-top:8px;" class="btn btn-outline-light li-right play_as">Flag User</button>
-          <form method="POST" id="flagging_form" class="blankit" action={{action([App\Http\Controllers\FlaggedObjectController::class, 'store'], [ 'user' => $Wuser->id]) }}>
-            <input type="hidden" name="user_id" value="{{ $Wuser->id }}">
-            <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="Enter a reason for flagging">
-            @csrf
-            @method('put')
-            <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">Flag User</button>
-            <button type="button" id="closeButton" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">Cancel</button>
-            </form>
-        @endif 
-        
-  </div>
-       @if(auth()->user()->role == 'admin')
-       <li class="li-right" style="padding-right: 8px; padding-top:13px;">You have admin powers!</li>
-       @elseif(auth()->user()->role == 'mod')
-       <li class="li-right" style="padding-right: 8px; padding-top:13px;">You have moderator powers!</li>
-       @endif
+            @if(isset($Wuser) && $Wuser->id != Auth::user()->id)
+                @can('destroy', $Wuser) 
+                <form method="POST" style="padding-left: 10px; padding-top:8px;" class="blankit" action="{{ action([App\Http\Controllers\UserController::class, 'destroy'], ['user' => $Wuser->id]) }}">
+                    <input type="hidden" name="user_id" value="{{ $Wuser->id }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('{{ addslashes(__('Delete User')) }}?')">{{ __('Delete User') }}</button>
+                </form>
+                @endcan
+                <button id="showButton" style="margin-left: 10px; margin-top:8px;" class="btn btn-outline-light li-right play_as">{{ __('Flag User') }}</button>
+                <form method="POST" id="flagging_form" class="blankit" action="{{ action([App\Http\Controllers\FlaggedObjectController::class, 'store'], ['user' => $Wuser->id]) }}">
+                    <input type="hidden" name="user_id" value="{{ $Wuser->id }}">
+                    <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter reason for flagging') }}">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Flag User') }}</button>
+                    <button type="button" id="closeButton" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">{{ __('Cancel') }}</button>
+                </form>
+            @endif 
+        </div>
+        @if(auth()->user()->role == 'admin')
+        <li class="li-right" style="padding-right: 8px; padding-top:13px;">{{ __('You have admin powers!') }}</li>
+        @elseif(auth()->user()->role == 'mod')
+        <li class="li-right" style="padding-right: 8px; padding-top:13px;">{{ __('You have moderator powers!') }}</li>
+        @endif
+  </ul>
+    
 </header>
 <script>
     var showButton = document.getElementById("showButton");

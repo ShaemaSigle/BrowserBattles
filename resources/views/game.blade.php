@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Game</title>
+    <title>{{ __('Game') }}</title>
     <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{!! url('assets/css/dogs.css') !!}" rel="stylesheet">
 
@@ -68,18 +68,18 @@
 <body>
 <?php use App\Models\Character;?>
 @include('layouts.partials.navbar')
- <h1>@auth <?php $user = Auth::user(); ?> Let's play, {{$user->username}}!</h1>
+ <h1>@auth <?php $user = Auth::user(); ?>{{ __("Let's play, ") }} {{$user->username}}!</h1>
   <div class="profile-container">
-    <h2>Game</h2>
+    <h2>{{ __('Game') }}</h2>
     
     @if ($user->active_character_id == NULL && !isset($character))
- <p class='error'>You don't have a character selected! Select a character (or create a new one) in order to play. You can do it in your profile.</p>
+ <p class='error'>{{ __("You don't have a character selected! Select a character (or create a new one) in order to play. You can do it in your profile.") }}</p>
  @else
  <ul>
- <h3 style="padding-left: 0;">Your character:</h3>
+ <h3 style="padding-left: 0;">{{ __('Your Character') }}:</h3>
  {{ $character->name }} - {{ $character->level }} LVL
  <br>
- Strength: {{ $character->strength }}
+ {{ __('Strength') }}: {{ $character->strength }}
  <br>
 
 
@@ -87,7 +87,7 @@
     <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
     @csrf
     @method('post')
-    <button type="submit" class="btn btn-outline-light li-right play_as">Get into a random encounter</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as">{{ __('Find a random enemy') }}</button>
  </form>
 
 

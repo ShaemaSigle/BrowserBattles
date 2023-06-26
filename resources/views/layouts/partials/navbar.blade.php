@@ -54,7 +54,7 @@
   <div class="container">
       <ul class="nav">
       <?php use App\Models\Character; ?>
-        <li><a href="{{action([App\Http\Controllers\HomeController::class, 'index'])}}" class="nav-link px-2 text-secondary">Home</a></li>
+        <li><a href="{{action([App\Http\Controllers\HomeController::class, 'index'])}}" class="nav-link px-2 text-secondary">{{ __('Home') }}</a></li>
         @auth 
         <?php 
           $user = Auth::user();  
@@ -64,24 +64,35 @@
           $address='game/'.$character->id;
           } 
           ?>
-        <li><a href="/profile" class="nav-link px-2 text-white">Profile</a></li>
-        <li><a href="{{action([App\Http\Controllers\CharacterController::class, 'show'], ['id'=>$character]) }}" class="nav-link px-2 text-white">Game</a></li>
+        <li><a href="/profile" class="nav-link px-2 text-white">{{ __('Profile') }}</a></li>
+        <li><a href="{{action([App\Http\Controllers\CharacterController::class, 'show'], ['id'=>$character]) }}" class="nav-link px-2 text-white">{{ __('Game') }}</a></li>
         @endauth
-        <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">Guilds</a></li>
-        <li><a href="/leaderboards" class="nav-link px-2 text-white">Leaderboards</a></li>
+        <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">{{ __('Guilds') }}</a></li>
+        <li><a href="/leaderboards" class="nav-link px-2 text-white">{{ __('Leaderboards') }}</a></li>
+          <li class="nav-link px-2 text-white">
+              <a href="{{route('lang.change','en')}}">{{ __('English') }}</a>
+          </li>
+          <li class="nav-link px-2 text-white">
+              <a href="{{route('lang.change','ru')}}">{{ __('Russian') }}</a>
+          </li>
+          <li class="nav-link px-2 text-white">
+              <a href="{{route('lang.change','lv')}}">{{ __('Latvian') }}</a>
+          </li>
       </ul>
   </div>
+
   @auth 
        {{auth()->user()->name}}
-       <li style="padding-right: 15px;  padding-top:4px;"><a href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2 li-right">Logout</a></li>
+       <li style="padding-right: 15px;  padding-top:4px;"><a href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2 li-right">{{ __('Logout') }}</a></li>
        @if(auth()->user()->active_character_id != NULL)
-       <li class="li-right" style="padding-right: 8px; padding-top:4px;">playing as {{$character->name}}</li>
+       <li class="li-right" style="padding-right: 8px; padding-top:4px;">{{ __('playing as ') }}{{$character->name}}</li>
        @endif
-       <li class="li-right" style="padding-right: 8px; padding-top:4px;">You are now logged as {{$user->username}}</li>
+       <li class="li-right" style="padding-right: 8px; padding-top:4px;">{{ __('You are now logged as ') }}{{$user->username}}</li>
+
   @endauth
   @guest
-       <li style="padding-right: 15px; padding-top:4px;"><a href="{{ route('login.perform') }}" class="btn btn-outline-light me-2 li-right">Login</a></li>
-       <li style="padding-right: 15px;" ><a href="{{ route('register.perform') }}" class="btn btn-outline-light li-right">Sign-up</a></li>
+       <li style="padding-right: 15px; padding-top:4px;"><a href="{{ route('login.perform') }}" class="btn btn-outline-light me-2 li-right">{{ __('Login') }}</a></li>
+       <li style="padding-right: 15px;" ><a href="{{ route('register.perform') }}" class="btn btn-outline-light li-right">{{ __('Sign-up') }}</a></li>
   @endguest
 </header>
 
