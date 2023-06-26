@@ -129,14 +129,15 @@
     var closeButton = document.getElementById("closeButton");
     var overlay = document.getElementById("overlay");
     
-
-    showButton.addEventListener("click", function() {
-      container.style.display = "block";
-      overlay.style.display = "block";
-    });
-
-    closeButton.addEventListener("click", function() {
+    if(showButton != null){
+      showButton.addEventListener("click", function() {
+        container.style.display = "block";
+        overlay.style.display = "block";
+      });
+    } 
+    if(closeButton != null)
+    {closeButton.addEventListener("click", function() {
       container.style.display = "none";
       overlay.style.display = "none";
-    });
+    });}
   </script>

@@ -53,17 +53,17 @@
      <div class="form-group">
       <div>
         <label for="character">Character</label>
-        <input type="checkbox" id="character" name="checkboxes[]" value="character">
+        <input type="checkbox" id="character" name="checkboxes[]" value="character" checked>
     </div>
 
     <div>
         <label for="user">User</label>
-        <input type="checkbox" id="user" name="checkboxes[]" value="user">
+        <input type="checkbox" id="user" name="checkboxes[]" value="user" checked>
     </div>
 
     <div>
         <label for="guild">Guild</label>
-        <input type="checkbox" id="guild" name="checkboxes[]" value="guild">
+        <input type="checkbox" id="guild" name="checkboxes[]" value="guild" checked>
     </div>
      </div>
      
@@ -100,48 +100,39 @@
 <script>
 $(document).ready(function(){
  fetch_flag_data();
- function fetch_flag_data(showGuilds = '', showCharacters = '', showUsers = ''){
+ function fetch_flag_data(showGuilds = 1, showCharacters = 1, showUsers = 1){
   $.ajax({
    url:"{{ route('flag_search.action') }}",
    method:'GET',
-   data: {searchValue: searchValue,
-    filterValue: filterValue
+   data: {showGuilds: showGuilds,
+    showCharacters: showCharacters,
+    showUsers: showUsers
   },
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
-    $('#total_records').text(data.total_data);
+    //$('#total_records').text(data.total_data);
    }
   })
  }
- var showGuilds = 0; 
- var showCharacters = 0; 
- var showUsers = 0;
- $("#sort").change(function () {
-        sortValue = $("#sort :selected").text()
-        fetch_flag_data(searchValue, filterValue);
-    });
- $(document).on('keyup', '#search', function(){
-  searchValue = $(this).val();
-  fetch_flag_data(searchValue, filterValue);
- });
+ var showGuilds = 1; 
+ var showCharacters = 1; 
+ var showUsers = 1;
+
  $('input[type="checkbox"]').change(function() {
     if(this.id == 'guild'){
       if(showGuilds == 0) showGuilds = 1;
       else if(showGuilds == 1) showGuilds = 0;
-      alert ("Guilds are now " + showGuilds);
     }
     if(this.id == 'user'){
       if(showUsers == 0) showUsers = 1;
       else if(showUsers == 1) showUsers = 0;
-      alert ("Users are now " + showUsers);
     }
     if(this.id == 'character'){
       if(showCharacters == 0) showCharacters = 1;
       else if(showCharacters == 1) showCharacters = 0;
-      alert ("Characters are now " + showCharacters);
     }
-    
-});
+    fetch_flag_data(showGuilds, showCharacters, showUsers);
+  });
 });
 </script>

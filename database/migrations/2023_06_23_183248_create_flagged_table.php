@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('cascade')->default(NULL);
             $table->foreignId('character_id')->nullable()->references('id')->on('characters')->onDelete('cascade')->default(NULL);
             $table->foreignId('guild_id')->nullable()->references('id')->on('guilds')->onDelete('cascade')->default(NULL);
-            $table->string('reason');
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

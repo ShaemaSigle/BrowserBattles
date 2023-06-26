@@ -82,42 +82,56 @@ class FlaggedObjectController extends Controller
     function search(Request $request){
         if($request->ajax()){
             $output = '';
-            $showCharacters = NULL;
-            $showUsers = NULL;
-            $showGuilds = NULL;
-            $query = $request->get('searchValue');
-            // if($sortingParam != ''){
-            //    if($sortingParam=='Level') $orderBy = 'level';
-            //    if($sortingParam=='Strength') $orderBy = 'strength';
-            //    if($sortingParam=='Duels') $orderBy = 'duelsWon';
-            // }
-            if($query != '') $data = DB::table('flagged_objects')->where('name', 'like', '%'.$query.'%')->orderBy('id', 'ASC')->get();
-            else $data =  DB::table('flagged_objects')->orderBy('id', 'asc')->get(); 
-            if($data->count() > 0){
-            foreach($data as $row){
-                $type = '';
-                $address = '';
-                if($row->user_id != NULL){
-                    $address = 'users/'.$row->user_id;
-                    $type = 'User';
-                } 
-                elseif($row->guild_id != NULL){
-                    $address = $row->guild_id.'/guild';
-                    $type = 'Guild';
-                } 
-                elseif($row->character_id != NULL){
+            $showCharacters = $request->get('showCharacters');
+            $showUsers = $request->get('showUsers');
+            $showGuilds = $request->get('showGuilds');
+            if($showCharacters == 1) 
+                $dataWithCharacter = DB::table('flagged_objects')->whereNotNull('character_id')->get();
+            else $dataWithCharacter = DB::table('flagged_objects')->Where('character_id', 'like', '0')->get();
+            if($showGuilds == 1)
+                $dataWithGuild = DB::table('flagged_objects')->whereNotNull('guild_id')->get();
+            else $dataWithGuild = DB::table('flagged_objects')->Where('guild_id', 'like', '0')->get();
+            if($showUsers == 1)
+                $dataWithUser = DB::table('flagged_objects')->whereNotNull('user_id')->get();
+            else $dataWithUser = DB::table('flagged_objects')->Where('user_id', 'like', '0')->get();
+            if($dataWithCharacter->count() > 0){
+                foreach($dataWithCharacter as $row){
                     $address = 'game/'.$row->character_id;
                     $type = 'Character';
+                    $output .= '<tr>
+                    <td>'.$type.'</td>
+                    <td>'.$row->reason.'</td>
+                    <td>'.$row->created_at.'</td>
+                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
+                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
                 }
-                $output .= '<tr>
-                <td>'.$type.'</td>
-                <td>'.$row->reason.'</td>
-                <td>'.$row->created_at.'</td>
-                <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
-                <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
             }
-        }
-         else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+            if($dataWithUser->count() > 0){
+                foreach($dataWithUser as $row){
+                    $address = 'users/'.$row->user_id;
+                    $type = 'User';
+
+                    $output .= '<tr>
+                    <td>'.$type.'</td>
+                    <td>'.$row->reason.'</td>
+                    <td>'.$row->created_at.'</td>
+                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
+                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
+                }
+            }
+            if($dataWithGuild->count() > 0){
+                foreach($dataWithGuild as $row){
+                    $address = $row->guild_id.'/guild';
+                    $type = 'Guild';
+                    $output .= '<tr>
+                    <td>'.$type.'</td>
+                    <td>'.$row->reason.'</td>
+                    <td>'.$row->created_at.'</td>
+                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
+                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
+                }
+            }
+            if($showCharacters == 0 && $showUsers == 0 && $showGuilds == 0) $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
          $data = array('table_data'  => $output);
          echo json_encode($data);
         }
