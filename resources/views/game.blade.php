@@ -72,11 +72,10 @@
   <div class="profile-container">
     <h2>Game</h2>
     
-    @if ($user->active_character_id == NULL)
- <p class='error'>You don't have a characters selected! Select a character (or create a new one) in order to play. You can do it in your profile.</p>
+    @if ($user->active_character_id == NULL && !isset($character))
+ <p class='error'>You don't have a character selected! Select a character (or create a new one) in order to play. You can do it in your profile.</p>
  @else
  <ul>
-<?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
  <h3 style="padding-left: 0;">Your character:</h3>
  {{ $character->name }} - {{ $character->level }} LVL
  <br>

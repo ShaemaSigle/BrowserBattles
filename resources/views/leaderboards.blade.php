@@ -86,7 +86,7 @@ Your position: <b id="position"></b>
  @endauth
  </div>
  @auth 
-@if($user->role=='admin')
+ @if($user->role=='admin' || $user->role=='mod')
 @include('layouts.partials.adminNavbar')
 @endif
 @endauth

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class GuildController extends Controller
 {
@@ -36,6 +37,8 @@ class GuildController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [ 'guild_name' => 'required', ]);
+        if($validator->fails()) return redirect('/guilds/create')->withErrors($validator);
         $guild = new Guild();
         $guild->name = $request->guild_name;
         $guild->owner = $request->guild_owner;
@@ -79,7 +82,7 @@ class GuildController extends Controller
         $guild->save();
         return redirect($id.'/guild');
     }
-    
+
     public function leave($id){
         $guild = Guild::findOrFail($id);
         $character = Character::findOrFail(Auth::user()->active_character_id);

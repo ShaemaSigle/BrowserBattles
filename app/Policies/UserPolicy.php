@@ -18,10 +18,14 @@ class UserPolicy
     public function update(User $user, User $userToChange){
         return ($user->id === $userToChange->id || $user->role=='admin');
     }
-    public function destroy(User $user, User $userToChange){
+    public function destroy(User $user, User $userToChange = NULL){
+        if($userToChange == NULL) return $user->role=='admin';
         return ($user->id === $userToChange->id || $user->role=='admin');
     }
     public function show(User $user, User $userToChange){
-        return ($user->id === $userToChange->id || $user->role=='admin');
+        return ($user->id === $userToChange->id || $user->role=='admin' || $user->role=='mod');
+    }
+    public function index(User $user){
+        return ($user->role=='mod' || $user->role=='admin');
     }
 }

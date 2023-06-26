@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class FlaggedObjectController extends Controller
 {
@@ -18,8 +19,7 @@ class FlaggedObjectController extends Controller
      */
     public function index()
     {
-        $flagged = FlaggedObject::all();
-        return view('characters', compact('characters'));
+        return view('flagged');
     }
 
     /**
@@ -37,12 +37,12 @@ class FlaggedObjectController extends Controller
     {
         $flag = new FlaggedObject();
         $object = NULL;
-        if($request->guild_id != NULL) $flag->object_id_guild = $request->guild_id;
-        if($request->character_id != NULL) $flag->object_id_character = $request->character_id;
-        if($request->user_id != NULL) $flag->object_id_user = $request->user_id;
+        if($request->guild_id != NULL) $flag->guild_id = $request->guild_id;
+        if($request->character_id != NULL) $flag->character_id = $request->character_id;
+        if($request->user_id != NULL) $flag->user_id = $request->user_id;
         $flag->reason = $request->reason;
         $flag->save();
-        return redirect('profile');
+        return redirect()->back();
     }
 
     /**
@@ -72,50 +72,53 @@ class FlaggedObjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        $user = Auth::user();
-        $character = Character::findOrFail($id);
-        if($user->active_character_id==$id) $user->active_character_id = NULL;
-        $character->delete();
-        $user->save();
-        return redirect("/profile");
+        $flag = FlaggedObject::findOrFail($request->id);
+        if(Gate::allows('delete-user')) $flag->delete();
+        return redirect("/flagged");
     }
 
-    function live(Request $request){
-        $user = Auth::user();
-        $mychar = NULL;
-        if($user != NULL && $user->active_character_id != NULL)$mychar = $user->active_character_id;
+    function search(Request $request){
         if($request->ajax()){
             $output = '';
-            $orderByAD = 'DESC';
-            $orderBy = '';
-            $sortingParam = $request->get('sortValue');
-            if($sortingParam != ''){
-               if($sortingParam=='Level') $orderBy = 'level';
-               if($sortingParam=='Strength') $orderBy = 'strength';
-               if($sortingParam=='Duels') $orderBy = 'duelsWon';
-            }
-            if($sortingParam != '') $data = DB::table('characters')->orderBy($orderBy, $orderByAD)->get();
-            else $data =  DB::table('characters')->orderBy('level', 'desc')->get(); 
+            $showCharacters = NULL;
+            $showUsers = NULL;
+            $showGuilds = NULL;
+            $query = $request->get('searchValue');
+            // if($sortingParam != ''){
+            //    if($sortingParam=='Level') $orderBy = 'level';
+            //    if($sortingParam=='Strength') $orderBy = 'strength';
+            //    if($sortingParam=='Duels') $orderBy = 'duelsWon';
+            // }
+            if($query != '') $data = DB::table('flagged_objects')->where('name', 'like', '%'.$query.'%')->orderBy('id', 'ASC')->get();
+            else $data =  DB::table('flagged_objects')->orderBy('id', 'asc')->get(); 
             if($data->count() > 0){
-                $counter=1;
-                $finpos = 0;
             foreach($data as $row){
+                $type = '';
+                $address = '';
+                if($row->user_id != NULL){
+                    $address = 'users/'.$row->user_id;
+                    $type = 'User';
+                } 
+                elseif($row->guild_id != NULL){
+                    $address = $row->guild_id.'/guild';
+                    $type = 'Guild';
+                } 
+                elseif($row->character_id != NULL){
+                    $address = 'game/'.$row->character_id;
+                    $type = 'Character';
+                }
                 $output .= '<tr>
-                <td>'.$counter.'</td>
-                <td>'.$row->name.'</td>
-                <td>'.$row->guild_id.'</td>
-                <td>'.$row->strength.'</td>
-                <td>'.$row->level.'</td>
-                <td>'.$row->duelsWon.'</td>
-                <td><a href="#" class="btn btn-outline-light play_as">Press here to duel</a></td></tr>';
-                if($mychar != NULL && $row->id == $mychar) $finpos = $counter;
-                $counter +=1;
+                <td>'.$type.'</td>
+                <td>'.$row->reason.'</td>
+                <td>'.$row->created_at.'</td>
+                <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
+                <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
             }
         }
          else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
-         $data = array('table_data'  => $output, 'pos' => $finpos);
+         $data = array('table_data'  => $output);
          echo json_encode($data);
         }
     }

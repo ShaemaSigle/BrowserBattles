@@ -26,6 +26,11 @@ class EncounterController extends Controller
     {
 
     }
+    public function duel($enemy_char_id)
+    {
+        $enemy = Character::findOrFail($enemy_char_id);
+        return view('encounter', ['enemy' => $enemy]);
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('encounters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('character_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('enemy_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('character_id')->references('id')->on('characters')->constrained()->onDelete('cascade');
+            $table->foreignId('enemy_id')->references('id')->on('enemies')->constrained()->onDelete('cascade');
             $table->string('result')->nullable();
             $table->timestamps();
         });

@@ -43,6 +43,9 @@ button:hover {
  <input type="hidden" name="user_id" value="{{ $user->id }}">
  <label for='name'>Character name:</label>
  <input type="text" name="name" id="name">
+ @if ($errors->has('name'))
+  <p style="font-size: 20px;"  class="text-danger text-left">{{ $errors->first('name') }}</p>
+  @endif
  <button type="submit">Create character</button>
  </form>
 </body>

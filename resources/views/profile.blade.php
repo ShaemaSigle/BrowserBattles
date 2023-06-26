@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>{{$user->username}}'s profile</title>
+ <title>{{$Wuser->username}}'s profile</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
     <style>
@@ -70,6 +70,19 @@
 ul{
   padding: 0;
 }
+.flagging_form_char {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      height: 30%;
+      width: 30%;
+      background-color: rgba(192, 159, 116);
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      border: 1px solid gray;
+      z-index: 9999;
+    }
 
 </style>
 </head>
@@ -78,17 +91,17 @@ ul{
 @include('layouts.partials.navbar')
  <h1>@auth <?php 
     //$user = Auth::user(); 
-    if($user->profpic_path != NULL) $image =  $user->profpic_path;
+    if($Wuser->profpic_path != NULL) $image =  $Wuser->profpic_path;
     else $image = 'default_knight.png';
  ?> 
  
- Wow, it's {{$user->username}}'s profile!</h1>
+ Wow, it's {{$Wuser->username}}'s profile!</h1>
   <div class="profile-container">
     <h2>Profile</h2>
     <br>
-    <strong>Email:</strong> {{$user->email}}<br>
-    <strong>Name:</strong> {{$user->username}}<br>
-    <strong>Your Role:</strong> {{$user->role}}<br>
+    <strong>Email:</strong> {{$Wuser->email}}<br>
+    <strong>Name:</strong> {{$Wuser->username}}<br>
+    <strong>Role:</strong> {{$Wuser->role}}<br>
     <div style="float: right; margin-top: -20vh; text-align:right;"> 
     Profile picture   
     </div><br>
@@ -100,38 +113,56 @@ ul{
  No characters found!
  @else
  <ul>
- <h3 style="padding-left: 0;">Your characters:</h3>
+ <h3 style="padding-left: 0;">Characters:</h3>
  @foreach ($characters as $character)
  <li class="character">
+    @can('delete-user', $Wuser)
  <form method="POST" class="blankit" action="{{action([App\Http\Controllers\CharacterController::class, 'destroy'],  $character->id) }}">
     @csrf
     @method('DELETE')
     <button class="btn btn-outline-light li-right play_as" style="background-color: red;" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this character?')">delete</button>
     </form>
- <div style="margin-top:15px;">{{ $character->name }} - {{ $character->level }} LVL  @if($character->id != $user->active_character_id)
- <form method="POST" class="blankit" action={{action([App\Http\Controllers\UserController::class, 'update'], [ 'user' => $user]) }}>
+    @endcan
+    @if($Wuser->id != Auth::user()->id)
+    @can('index-users')
+    <button style="float: left;" class="btn btn-outline-light li-right play_as showButton">Flag</button>
+    <form method="POST" class="flagging_form_char" class="blankit" action={{action([App\Http\Controllers\FlaggedObjectController::class, 'store'], [ 'user' => $Wuser->id]) }}>
+            <input type="hidden" name="character_id" value="{{ $character->id }}">
+            <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="Enter a reason for flagging">
+            @csrf
+            @method('put')
+            <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">Flag Character</button>
+            <button type="button" id="closeButtonChar" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">Cancel</button>
+        </form>
+    @endcan
+    @endif
+ <div style="margin-top:15px;">{{ $character->name }}: {{ $character->strength }} strength on {{ $character->level }} LVL  @if($character->id != $Wuser->active_character_id)
+ @if($character->user_id == Auth::user()->id)
+ <form method="POST" class="blankit" action={{action([App\Http\Controllers\UserController::class, 'update'], [ 'user' => $Wuser]) }}>
     <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
     @csrf
     @method('put')
     <button type="submit" class="btn btn-outline-light li-right play_as">Press to play as</button>
  </form>
+ @endif
 </div>
  @endif
 </li>
  @endforeach
- 
+
  </ul>
  @endif
  <br>
- @if($user->id == Auth::user()->id)
+ @if($Wuser->id == Auth::user()->id)
  <a href="{{action([App\Http\Controllers\CharacterController::class, 'create'])}}" class="btn btn-outline-light">Create a new character</a>
 @endif
+@can('delete-user', $Wuser)
  <br><br><hr><br>Here you can edit this account.
 <br> <br>
 
     <div style="float: left;" class="form-group form-floating mb-3">
-    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
-        [ 'user' => $user]) }}>
+    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $Wuser->id,
+        [ 'user' => $Wuser]) }}>
         @csrf
         @method('put')
         <label for="floatingEmail">Email address</label>
@@ -143,8 +174,8 @@ ul{
     </form>
         </div>
     <div style="float: left;" class="form-group form-floating mb-3">
-    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
-        [ 'user' => $user]) }}>
+    <form class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $Wuser->id,
+        [ 'user' => $Wuser]) }}>
         @csrf
         @method('put')
         <label for="floatingName">Username</label>
@@ -156,8 +187,8 @@ ul{
     </form>
         </div>
         
-        <form style="float: left;" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
-        [ 'user' => $user]) }}>
+        <form style="float: left;" class="profile-form" method="post" action={{ action([App\Http\Controllers\UserController::class, 'update'],  $Wuser->id,
+        [ 'user' => $Wuser]) }}>
         @csrf
         @method('put')
         <div class="form-group form-floating mb-3">
@@ -178,8 +209,8 @@ ul{
         </div>
         </form>
         <div class="form-group form-floating mb-3">
-        <form style="float: left; margin-top: -10vh;"  class="profile-form"  action={{ action([App\Http\Controllers\UserController::class, 'update'],  $user->id,
-        [ 'user' => $user]) }} method="POST" enctype="multipart/form-data">
+        <form style="float: left; margin-top: -10vh;"  class="profile-form"  action={{ action([App\Http\Controllers\UserController::class, 'update'],  $Wuser->id,
+        [ 'user' => $Wuser]) }} method="POST" enctype="multipart/form-data">
           @csrf
           @method('put')
           <label for="ProfPic">Upload a new Profile Picture</label>
@@ -189,17 +220,38 @@ ul{
             @endif
           <button type="submit">Upload</button>
       </form></div>
-<form class="blankitNoFloat" method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $user->id) }}">
+<form class="blankitNoFloat" method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $Wuser->id) }}">
     @csrf
     @method('DELETE')
     You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('Are you sure you wish to delete this account?')">delete this account</button>
     </form>
+    @endcan
 </div>
 @endauth
 </body>
 @auth 
-@if($user->role=='admin')
+@can('index-users')
 @include('layouts.partials.adminNavbar')
-@endif
+@endcan
 @endauth
 </html>
+
+<script>
+    var showButtons = document.getElementsByClassName("showButton");
+    var containersChar = document.getElementsByClassName("flagging_form_char");
+    var closeButton = document.getElementById("closeButtonChar");
+    var overlay = document.getElementById("overlay");
+    
+    for(let i = 0; i < showButtons.length; i++) {
+        showButtons[i].addEventListener("click", function() {
+            console.log("Clicked index: " + i);
+            containersChar[i].style.display = "block";
+            overlay.style.display = "block";
+        })
+    }
+
+    closeButton.addEventListener("click", function() {
+        containersChar.style.display = "none";
+      overlay.style.display = "none";
+    });
+  </script>

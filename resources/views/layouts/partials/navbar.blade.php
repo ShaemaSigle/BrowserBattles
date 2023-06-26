@@ -14,7 +14,7 @@
 .container {
     height: 0px;
 }
-  .navbar li {
+  .navbar a {
       
       color: #FFFFFF;
       text-align: center;
@@ -25,7 +25,7 @@
       text-decoration: none;
     }
 
-    .navbar a:hover {
+    .navbar a:hover, button:hover {
       background-color: salmon;
     }
 
@@ -41,23 +41,37 @@
       float: right;
       color:white;
     }
+    .blankit{
+    border: none;
+    background:none;
+    float: left;
+    position: relative;
+    color:white;
+}
   </style>
 
 <header class="navbar">
   <div class="container">
       <ul class="nav">
+      <?php use App\Models\Character; ?>
         <li><a href="{{action([App\Http\Controllers\HomeController::class, 'index'])}}" class="nav-link px-2 text-secondary">Home</a></li>
-        @auth <?php $user = Auth::user(); ?>
+        @auth 
+        <?php 
+          $user = Auth::user();  
+          $character = '0';
+          if($user->active_character_id != NULL){
+            $character = Character::where('id', '=', $user->active_character_id)->first();
+          $address='game/'.$character->id;
+          } 
+          ?>
         <li><a href="/profile" class="nav-link px-2 text-white">Profile</a></li>
-        <li><a href="{{action([App\Http\Controllers\GameController::class, 'index'])}}" class="nav-link px-2 text-white">Game</a></li>
+        <li><a href="{{action([App\Http\Controllers\CharacterController::class, 'show'], ['id'=>$character]) }}" class="nav-link px-2 text-white">Game</a></li>
         @endauth
         <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">Guilds</a></li>
         <li><a href="/leaderboards" class="nav-link px-2 text-white">Leaderboards</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Suggest</a></li>
       </ul>
-      <?php use App\Models\Character;?>
   </div>
-  @auth <?php  $character = Character::where('id', '=', $user->active_character_id)->first();?>
+  @auth 
        {{auth()->user()->name}}
        <li style="padding-right: 15px;  padding-top:4px;"><a href="{{ route('logout.perform') }}" class="btn btn-outline-light me-2 li-right">Logout</a></li>
        @if(auth()->user()->active_character_id != NULL)
@@ -70,3 +84,4 @@
        <li style="padding-right: 15px;" ><a href="{{ route('register.perform') }}" class="btn btn-outline-light li-right">Sign-up</a></li>
   @endguest
 </header>
+

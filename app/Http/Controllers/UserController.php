@@ -52,7 +52,7 @@ class UserController extends Controller
         else $user = User::findOrFail($userID);
         if(Gate::allows('show-user', $user)){
             $characters = Character::where('user_id', '=', $user->id)->get();
-            return view('profile', ['characters' => $characters, 'user' => $user]);
+            return view('profile', ['characters' => $characters, 'Wuser' => $user]);
         }
         else redirect('profile');
     }
@@ -172,7 +172,7 @@ class UserController extends Controller
          <td>'.$row->email.'</td>
          <td>'.$row->role.'</td>
          <td>
-         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">Press here to view</a>
+         <a href="users/'.$row->id.'" class="btn btn-outline-light play_as">Press here to view</a>
          </td>
         </tr>
         ';

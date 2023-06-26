@@ -41,9 +41,9 @@
 <body>
 @include('layouts.partials.navbar')
  <h1>All of the guilds:</h1>
-<?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
+<?php $authuser = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
- <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
+ <?php $character = Character::where('id', '=', $authuser->active_character_id)->first();?>
  @endauth
  <div class="profile-container">
 <div class="container-box">
@@ -90,7 +90,7 @@
 
 </body>
 @auth 
-@if($user->role=='admin')
+@if($authuser->role=='admin' || $authuser->role=='mod')
 @include('layouts.partials.adminNavbar')
 @endif
 @endauth

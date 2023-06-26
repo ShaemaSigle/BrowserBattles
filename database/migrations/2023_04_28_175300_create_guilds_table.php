@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('guilds', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
             $table->string('name');
-            $table->foreignId('owner');
+            $table->foreignId('owner')->references('id')->on('characters')->onDelete('cascade');
             $table->string('members_amount');
             $table->string('icon_path');
             $table->string('description')->nullable();

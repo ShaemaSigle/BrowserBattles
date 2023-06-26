@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\LinesOfCode\Counter;
 
 class CharacterController extends Controller
@@ -35,6 +37,8 @@ class CharacterController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [ 'name' => 'required', ]);
+        if($validator->fails()) return redirect('/characters/create')->withErrors($validator);
         $character = new Character();
         $character->name = $request->name;
         $character->user_id = $request->user_id;
@@ -49,9 +53,17 @@ class CharacterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(){
-        $characters = Character::where('user_id', '=', @auth()->user()->id)->first();
-        return view('profile', ['characters' => $characters]);
+    public function show(Request $request){
+        //dd('yup');
+        if($request->id == 0)  return view('game');
+        $character = Character::findOrFail($request->id);
+        //dd($character->name);
+        if(Gate::allows('view-character', $character)) return view('game', ['character' => $character]);
+        elseif(Auth::user()->active_character_id != NULL)return redirect('game/'.Auth::user()->active_character_id);
+        else return redirect('game/0');
+        //else return view('game', ['character' => Character::findOrFail(Auth::user()->active_character_id)]);
+        // $characters = Character::where('user_id', '=', @auth()->user()->id)->first();
+        // return view('profile', ['characters' => $characters]);
     }
 
     /**
@@ -110,7 +122,7 @@ class CharacterController extends Controller
                 <td>'.$row->strength.'</td>
                 <td>'.$row->level.'</td>
                 <td>'.$row->duelsWon.'</td>
-                <td><a href="#" class="btn btn-outline-light play_as">Press here to duel</a></td></tr>';
+                <td><a href="/game/duel/'.$row->id.'" class="btn btn-outline-light play_as">Press here to duel</a></td></tr>';
                 if($mychar != NULL && $row->id == $mychar) $finpos = $counter;
                 $counter +=1;
             }

@@ -41,9 +41,8 @@
 <body>
 @include('layouts.partials.navbar')
  <h1>All of the users:</h1>
-<?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
+
  @auth 
- <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
  @endauth
  <div class="profile-container">
 <div class="container-box">
@@ -79,7 +78,8 @@
 
 </body>
 @auth 
-@if($user->role=='admin')
+<?php $authuser = Auth::user();?>
+@if($authuser->role=='admin' || $authuser->role=='mod')
 @include('layouts.partials.adminNavbar')
 @endif
 @endauth

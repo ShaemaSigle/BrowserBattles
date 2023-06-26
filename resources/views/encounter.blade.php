@@ -44,15 +44,21 @@
 </head>
 
 <body>
-<?php use App\Models\Character; use App\Models\Enemy;?>
+<?php use App\Models\Character; use App\Models\User; use App\Models\Enemy;?>
  <h1>@auth <?php $user = Auth::user(); ?> Let's play, {{$user->username}}!</h1>
  <?php 
   $character = Character::findOrFail($user->active_character_id); 
-  $enemy = Enemy::findOrFail($encounter->enemy_id);
+  if(!isset($enemy)) {
+    $enemy = Enemy::findOrFail($encounter->enemy_id);
+    $enemy_icon = $enemy->icon_name;
+  }
+  else{
+    $enemy_icon = User::findOrFail($enemy->user_id)->profpic_path;
+    if($enemy_icon == NULL) $enemy_icon = 'default_knight.png';
+  }
     if($user->profpic_path != NULL) $image =  $user->profpic_path;
     else $image = 'default_knight.png';
  ?> 
- ?>
   <div class="profile-container">
     <h2 style="text-align: center;">Encounter</h2>
 
@@ -62,7 +68,7 @@
  @else
 Enemy: {{$enemy->name}}
 <br>
-<img src="{{asset('assets/img/'.$enemy->icon_name)}}" alt="" height="200px" width="200px">
+<img src="{{asset('assets/img/'.$enemy_icon)}}" alt="" height="200px" width="200px">
 <br>
 Strength: {{$enemy->strength}}
 
@@ -73,7 +79,7 @@ You:{{$character->name}}<br>
   Your strength: {{$character->strength}}
 </div>
 <br>
-
+@isset($encounter)
 @if($encounter->result==NULL)
 <div style="margin-left: 45%;">
 <form method="POST" class="blankit" action={{action([App\Http\Controllers\EncounterController::class, 'update'], [ 'encounter' => $encounter])}}>
@@ -93,13 +99,15 @@ You:{{$character->name}}<br>
 <br><br>
 </div>
 
+
 @elseif($encounter->result == "userWon") You won! The encounter has ended.
 @elseif($encounter->result == "userLost") You lost! The encounter has ended.
 @endif
+@endisset
 
  <br>
 You can leave after the fight ends or before that, in which case the fight will be postponed.
-<a href="{{action([App\Http\Controllers\GameController::class, 'index'])}}" class="btn btn-outline-light li-right play_as">Leave</a>
+<a href="{{action([App\Http\Controllers\CharacterController::class, 'show'], ['id'=>$character])}}" class="btn btn-outline-light li-right play_as">Leave</a>
 
 @endif
 @endauth

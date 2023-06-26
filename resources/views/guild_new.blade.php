@@ -36,14 +36,12 @@ button:hover {
  <input type="hidden" name="guild_owner" value="{{ $character->id }}">
  <label for='guild_name'>Guild name:</label>
  <input type="text" name="guild_name" id="guild_name">
+ @if ($errors->has('guild_name'))
+  <p style="font-size: 20px;"  class="text-danger text-left">{{ $errors->first('guild_name') }}</p>
+  @endif
  <label for='guild_description'>Description (optional):</label>
  <input type="text" name="guild_description" id="guild_description">
  <button type="submit" value="Add">Save</button>
  </form>
 </body>
-@auth 
-@if($user->role=='admin')
-@include('layouts.partials.adminNavbar')
-@endif
-@endauth
 </html>

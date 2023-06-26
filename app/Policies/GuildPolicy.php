@@ -30,6 +30,7 @@ class GuildPolicy
         return ($char->guild_id == $guild->id && $char->id != $guild->owner);
     }
     public function create(User $user){
+        if($user->active_character_id == NULL) return false;
         $char = Character::findOrFail($user->active_character_id);
         return ($char->guild_id == NULL);
     }

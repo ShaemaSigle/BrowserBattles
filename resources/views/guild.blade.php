@@ -152,9 +152,9 @@ use App\Http\Controllers\GuildController;
 
 </body>
 @auth 
-@if($user->role=='admin')
+@can('index-users')
 @include('layouts.partials.adminNavbar')
-@endif
+@endcan
 @endauth
 </html>
 <script>

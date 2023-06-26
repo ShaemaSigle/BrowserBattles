@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('flagged_objects', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
-            $table->foreignId('object_id_user')->nullable();
-            $table->foreignId('object_id_character')->nullable();
-            $table->foreignId('object_id_guild')->nullable();
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('cascade')->default(NULL);
+            $table->foreignId('character_id')->nullable()->references('id')->on('characters')->onDelete('cascade')->default(NULL);
+            $table->foreignId('guild_id')->nullable()->references('id')->on('guilds')->onDelete('cascade')->default(NULL);
             $table->string('reason');
             $table->timestamps();
         });

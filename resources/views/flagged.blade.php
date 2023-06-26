@@ -48,22 +48,35 @@
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Search Objects</div>
+    <div class="panel-heading">Filter Objects</div>
     <div class="panel-body">
      <div class="form-group">
-      <input type="text" name="search" id="search" class="form-control" placeholder="Give me some letters" />
+      <div>
+        <label for="character">Character</label>
+        <input type="checkbox" id="character" name="checkboxes[]" value="character">
+    </div>
 
+    <div>
+        <label for="user">User</label>
+        <input type="checkbox" id="user" name="checkboxes[]" value="user">
+    </div>
+
+    <div>
+        <label for="guild">Guild</label>
+        <input type="checkbox" id="guild" name="checkboxes[]" value="guild">
+    </div>
      </div>
+     
      <div class="table-responsive">
       <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
       <table class="table table-striped table-bordered">
        <thead>
         <tr>
         <th>Object Type</th>
-         <th>Name</th>
-         <th>ID</th>
          <th>Reason</th>
+         <th>Flag Date</th>
          <th>View</th>
+         <th>Dismiss</th>
         </tr>
        </thead>
        <tbody>
@@ -73,8 +86,6 @@
     </div>    
    </div>
   </div>
-  <br>
- Total users: <b id="total_records"> </b>
  </div>
 
 </body>
@@ -88,13 +99,13 @@
 
 <script>
 $(document).ready(function(){
- fetch_user_data();
- function fetch_user_data(searchValue = '', sortValue = ''){
+ fetch_flag_data();
+ function fetch_flag_data(showGuilds = '', showCharacters = '', showUsers = ''){
   $.ajax({
-   url:"{{ route('user_search.action') }}",
+   url:"{{ route('flag_search.action') }}",
    method:'GET',
    data: {searchValue: searchValue,
-    sortValue: sortValue
+    filterValue: filterValue
   },
    dataType:'json',
    success:function(data){
@@ -103,14 +114,34 @@ $(document).ready(function(){
    }
   })
  }
- var sortValue; var searchValue;
+ var showGuilds = 0; 
+ var showCharacters = 0; 
+ var showUsers = 0;
  $("#sort").change(function () {
         sortValue = $("#sort :selected").text()
-        fetch_user_data(searchValue, sortValue);
+        fetch_flag_data(searchValue, filterValue);
     });
  $(document).on('keyup', '#search', function(){
   searchValue = $(this).val();
-  fetch_user_data(searchValue, sortValue);
+  fetch_flag_data(searchValue, filterValue);
  });
+ $('input[type="checkbox"]').change(function() {
+    if(this.id == 'guild'){
+      if(showGuilds == 0) showGuilds = 1;
+      else if(showGuilds == 1) showGuilds = 0;
+      alert ("Guilds are now " + showGuilds);
+    }
+    if(this.id == 'user'){
+      if(showUsers == 0) showUsers = 1;
+      else if(showUsers == 1) showUsers = 0;
+      alert ("Users are now " + showUsers);
+    }
+    if(this.id == 'character'){
+      if(showCharacters == 0) showCharacters = 1;
+      else if(showCharacters == 1) showCharacters = 0;
+      alert ("Characters are now " + showCharacters);
+    }
+    
+});
 });
 </script>

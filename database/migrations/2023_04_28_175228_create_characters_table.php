@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('characters', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
             $table->string('name');
             $table->integer('strength');
             $table->integer('level');
             $table->integer('duelsWon');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('guild_id')->nullable();
             $table->timestamps();
         });
