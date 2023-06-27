@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>Guild view</title>
+ <title>{{ __('Guild') }} </title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -78,26 +78,26 @@ use App\Http\Controllers\GuildController;
  $user = Auth::user(); 
  $owner = Character::findOrFail($guild->owner);
 ?>
-<h1>Guild view</h1>
+<h1>{{ __('Guild') }}</h1>
  <div class="profile-container">
  
  <div class="container-box">
-    <h3 style="padding: 0; margin: 0;">List of members</h3>
+    <h3 style="padding: 0; margin: 0;">{{ __('Members') }}</h3>
    <div class="panel panel-default" style="width: 40vw;">
-    <div class="panel-heading">Seek players</div>
+    <div class="panel-heading">{{ __('Search') }}</div>
     <div class="panel-body">
      <div class="form-group">
-      <input type="text" name="search" id="search" class="form-control" placeholder="Begin inputting the name of the guild..." />
+      <input type="text" name="search" id="search" class="form-control" placeholder="{{ __('What are you looking for?') }}" />
      </div>
      <div class="table-responsive">
       <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
       <table class="table table-striped table-bordered">
        <thead>
         <tr>
-         <th>Name</th>
-         <th>Strength</th>
-         <th>Level</th>
-         <th>DuelsWon</th>
+         <th>{{ __('Name') }}</th>
+         <th>{{ __('Strength') }}</th>
+         <th>{{ __('Level') }}</th>
+         <th>{{ __('Duels Won') }}</th>
         </tr>
        </thead>
        <tbody>
@@ -108,20 +108,20 @@ use App\Http\Controllers\GuildController;
    </div>
 
 <div class="subdescr">
-    Description
+{{ __('Description') }}
    <div class="descr">
     {{$guild->description}}
    </div>
-   Owner: {{$owner->name}}
+   {{ __('Owner') }}: {{$owner->name}}
 </div>
 
-@if($user->role != 'admin')
+@if($user->role != 'admin' || $owner->id == Auth::user()->active_character_id)
   @can('destroy', $guild)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'destroy'], [ 'guild' => $guild->id]) }}>
     <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
     @csrf
     @method('DELETE')
-    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to delete this account?')">Delete guild</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('{{ addslashes(__('Are you sure you wish to delete it?')) }}')">{{ __('Delete Guild') }}</button>
  </form>
  @endcan
  @endif
@@ -134,7 +134,7 @@ use App\Http\Controllers\GuildController;
  <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'leave'], ['id' => $guild->id]) }}>
     @csrf
     @method('PuT')
-    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('Are you sure you wish to leave this guild?')">Leave guild</button>
+    <button type="submit" class="btn btn-outline-light li-right play_as" onclick="return confirm('{{ addslashes(__('Are you sure you wish to leave this guild?')) }}')">{{ __('Leave guild') }}</button>
  </form>
 @endcan
 
@@ -142,7 +142,7 @@ use App\Http\Controllers\GuildController;
  <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'join'], ['id' => $guild->id]) }}>
     @csrf
     @method('PuT')
-    <button type="submit" class="btn btn-outline-light li-right play_as"> Join guild </button>
+    <button type="submit" class="btn btn-outline-light li-right play_as">{{ __('Join guild') }}</button>
  </form>
  @endcan
 

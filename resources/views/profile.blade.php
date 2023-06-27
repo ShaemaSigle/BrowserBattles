@@ -132,7 +132,7 @@ ul{
             @csrf
             @method('put')
             <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Flag Character') }}</button>
-            <button type="button" id="closeButtonChar" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">{{ __('Cancel') }}</button>
+            <button type="button" class="closeButtonChar btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; left: 10px;">{{ __('Cancel') }}</button>
         </form>
     @endcan
     @endif
@@ -165,12 +165,12 @@ ul{
         [ 'user' => $Wuser]) }}>
         @csrf
         @method('put')
-        <label for="floatingEmail">Email address</label>
+        <label for="floatingEmail">{{ __('Email') }}</label>
             <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="name@example.com" required="required" autofocus>
             @if ($errors->has('email'))
                 <span class="text-danger text-left">{{ $errors->first('email') }}</span>
             @endif
-            <button type="submit">Update Email</button>
+            <button type="submit">{{ __('Update') }}</button>
     </form>
         </div>
     <div style="float: left;" class="form-group form-floating mb-3">
@@ -178,7 +178,7 @@ ul{
         [ 'user' => $Wuser]) }}>
         @csrf
         @method('put')
-        <label for="floatingName">Username</label>
+        <label for="floatingName">{{ __('Username') }}</label>
             <input type="name" class="form-control" name="username" value="{{ old('username') }}" placeholder="{{ __('Username') }}" required="required" autofocus>
             @if ($errors->has('username'))
                 <span class="text-danger text-left">{{ $errors->first('username') }}</span>
@@ -223,7 +223,7 @@ ul{
 <form class="blankitNoFloat" method="POST" action="{{action([App\Http\Controllers\UserController::class, 'destroy'],  $Wuser->id) }}">
     @csrf
     @method('DELETE')
-    You can also <button class="deletion" type="submit" value="delete" onclick="return confirm('{{ addslashes(__('delete this account')) }}?')">{{ __('delete this account') }}</button>
+    {{ __('You can also') }} <button class="deletion" type="submit" value="delete" onclick="return confirm('{{ addslashes(__('delete this account')) }}?')">{{ __('delete this account') }}</button>
     </form>
     @endcan
 </div>
@@ -239,19 +239,19 @@ ul{
 <script>
     var showButtons = document.getElementsByClassName("showButton");
     var containersChar = document.getElementsByClassName("flagging_form_char");
-    var closeButton = document.getElementById("closeButtonChar");
+    var closeButtons = document.getElementsByClassName("closeButtonChar");
     var overlay = document.getElementById("overlay");
     
     for(let i = 0; i < showButtons.length; i++) {
         showButtons[i].addEventListener("click", function() {
-            console.log("Clicked index: " + i);
             containersChar[i].style.display = "block";
             overlay.style.display = "block";
         })
     }
-
-    closeButton.addEventListener("click", function() {
-        containersChar.style.display = "none";
-      overlay.style.display = "none";
-    });
+    for(let i = 0; i < closeButtons.length; i++) {
+        closeButtons[i].addEventListener("click", function() {
+            containersChar[i].style.display = "none";
+            overlay.style.display = "none";
+        });
+    }
   </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>Flagged objects</title>
+ <title>{{ __('Flagged List') }}</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -40,7 +40,7 @@
 </head>
 <body>
 @include('layouts.partials.navbar')
- <h1>All of the flagged objects:</h1>
+ <h1>{{ __('All of the flagged objects') }}:</h1>
 <?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
  <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
@@ -48,21 +48,21 @@
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Filter Objects</div>
+    <div class="panel-heading">{{ __('Filter Objects') }}</div>
     <div class="panel-body">
      <div class="form-group">
       <div>
-        <label for="character">Character</label>
+        <label for="character">{{ __('Character') }}</label>
         <input type="checkbox" id="character" name="checkboxes[]" value="character" checked>
     </div>
 
     <div>
-        <label for="user">User</label>
+        <label for="user">{{ __('User') }}</label>
         <input type="checkbox" id="user" name="checkboxes[]" value="user" checked>
     </div>
 
     <div>
-        <label for="guild">Guild</label>
+        <label for="guild">{{ __('Guild') }}</label>
         <input type="checkbox" id="guild" name="checkboxes[]" value="guild" checked>
     </div>
      </div>
@@ -72,11 +72,11 @@
       <table class="table table-striped table-bordered">
        <thead>
         <tr>
-        <th>Object Type</th>
-         <th>Reason</th>
-         <th>Flag Date</th>
-         <th>View</th>
-         <th>Dismiss</th>
+        <th>{{ __('Type') }}</th>
+         <th>{{ __('Reason') }}</th>
+         <th>{{ __('Flag Date') }}</th>
+         <th>{{ __('View') }}</th>
+         <th>{{ __('Dismiss') }}</th>
         </tr>
        </thead>
        <tbody>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 use SebastianBergmann\LinesOfCode\Counter;
 
 class CharacterController extends Controller
@@ -99,35 +100,58 @@ class CharacterController extends Controller
         $user = Auth::user();
         $mychar = NULL;
         if($user != NULL && $user->active_character_id != NULL)$mychar = $user->active_character_id;
+        $loc = Session::get("locale");
+        if($loc == 'ru') {
+            $NDF = 'Информации не найдено.';
+            $duel = 'Вызвать на дуэль';
+        }
+        elseif($loc == 'en'){
+            $NDF = 'No Data Found.';
+            $duel = 'Ask for a duel';
+        } 
+        else{
+            $NDF = 'Informācija nav atrasta.';
+            $duel = 'Izaicināt uz dueli';
+        } 
         if($request->ajax()){
             $output = '';
             $orderByAD = 'DESC';
             $orderBy = '';
             $sortingParam = $request->get('sortValue');
             if($sortingParam != ''){
-               if($sortingParam=='Level') $orderBy = 'level';
-               if($sortingParam=='Strength') $orderBy = 'strength';
-               if($sortingParam=='Duels') $orderBy = 'duelsWon';
+               if($sortingParam=='0') $orderBy = 'level';
+               if($sortingParam=='1') $orderBy = 'strength';
+               if($sortingParam=='2') $orderBy = 'duelsWon';
             }
-            if($sortingParam != '') $data = DB::table('characters')->orderBy($orderBy, $orderByAD)->get();
-            else $data =  DB::table('characters')->orderBy('level', 'desc')->get(); 
+            if($sortingParam != '') 
+                $data = DB::table('characters')
+                    ->join('guilds', 'characters.guild_id', '=', 'guilds.id')
+                        ->select('characters.name as character_name', 'characters.id as id', 'guilds.name as guild_name', 'characters.strength', 'characters.level', 'characters.duelsWon')
+                            ->orderBy($orderBy, $orderByAD)
+                                ->get();
+            else $data =  DB::table('characters')
+                ->join('guilds', 'characters.guild_id', '=', 'guilds.id')
+                    ->select('characters.name as character_name', 'characters.id as id', 'guilds.name as guild_name', 'characters.strength', 'characters.level', 'characters.duelsWon')
+                        ->orderBy('level', 'desc')
+                            ->get(); 
+
             if($data->count() > 0){
                 $counter=1;
                 $finpos = 0;
             foreach($data as $row){
                 $output .= '<tr>
                 <td>'.$counter.'</td>
-                <td>'.$row->name.'</td>
-                <td>'.$row->guild_id.'</td>
+                <td>'.$row->character_name.'</td>
+                <td>'.$row->guild_name.'</td>
                 <td>'.$row->strength.'</td>
                 <td>'.$row->level.'</td>
                 <td>'.$row->duelsWon.'</td>
-                <td><a href="/game/duel/'.$row->id.'" class="btn btn-outline-light play_as">Press here to duel</a></td></tr>';
+                <td><a href="/game/duel/'.$row->id.'" class="btn btn-outline-light play_as">'.$duel.'</a></td></tr>';
                 if($mychar != NULL && $row->id == $mychar) $finpos = $counter;
                 $counter +=1;
             }
         }
-         else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+         else $output = '<tr> <td align="center" colspan="5">'.$NDF.'</td> </tr> ';
          $data = array('table_data'  => $output, 'pos' => $finpos);
          echo json_encode($data);
         }

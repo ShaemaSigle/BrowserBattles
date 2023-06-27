@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 class GuildController extends Controller
 {
@@ -129,6 +130,10 @@ class GuildController extends Controller
             if($query != '') $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->where('name', 'like', '%'.$query.'%')->get();
             else $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->orderBy('level', 'desc')->get();
             $total_row = $data->count();
+            $loc = Session::get("locale");
+            if($loc == 'ru') $NDF = 'Информации не найдено.';
+            elseif($loc == 'en') $NDF = 'No Data Found.';
+            else $NDF = 'Informācija nav atrasta.';
             if($total_row > 0){
              foreach($data as $row){
               $output .= '
@@ -143,7 +148,7 @@ class GuildController extends Controller
             }
             else{
              $output = '
-             <tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+             <tr> <td align="center" colspan="5">'.$NDF.'</td> </tr> ';
             }
             $data = array(
              'table_data'  => $output,
@@ -163,15 +168,15 @@ class GuildController extends Controller
         $orderBy = '';
         $sortingParam = $request->get('sortValue');
         if($sortingParam != ''){
-            if($sortingParam=='MembersAsc'){
+            if($sortingParam=='0'){
                 $orderByAD = 'ASC';
                 $orderBy = 'members_amount';
            } 
-            if($sortingParam=='MembersDesc'){
+            if($sortingParam=='1'){
                 $orderByAD= 'DESC';
                 $orderBy = 'members_amount';
             }
-            if($sortingParam=='Alfabetically'){
+            if($sortingParam=='2'){
                 $orderByAD= 'ASC';
                 $orderBy = 'name';
             }
@@ -186,24 +191,42 @@ class GuildController extends Controller
            else if($query != ''){
              $data = DB::table('guilds')->where('name', 'like', '%'.$query.'%')->get();
            }
-           else $data =  DB::table('guilds')->orderBy('id', 'desc')->get(); 
+           else $data =  DB::table('guilds')->orderBy('members_amount', 'asc')->get(); 
       $total_row = $data->count();
+      $loc = Session::get("locale");
+      if($loc == 'ru') {
+        $NDF = 'Информации не найдено.';
+        $closed = 'Закрытая';
+        $open = 'Открытая';
+      }
+      elseif($loc == 'en'){
+        $NDF = 'No Data Found.';
+        $closed = 'Closed';
+        $open = 'Open';
+      } 
+      else{
+        $NDF = 'Informācija nav atrasta.';
+        $closed = 'Slēgta';
+        $open = 'Atvērta';
+      } 
       if($total_row > 0){
        foreach($data as $row){
+        if($row->isopen == 'false') $type = $closed;
+        else $type = $open;
         $output .= '
         <tr>
          <td>'.$row->name.'</td>
          <td>'.$row->members_amount.'</td>
          <td>'.$row->description.'</td>
-         <td>'.$row->isopen.'</td>
+         <td>'.$type.'</td>
          <td>
-         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">Press here to view</a>
+         <a href="'.$row->id.'/guild'.'" class="btn btn-outline-light play_as">->👁️<-</a>
          </td>
         </tr>
         ';
        }
       }
-      else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+      else $output = '<tr> <td align="center" colspan="5">'.$NDF.'</td> </tr> ';
       $data = array(
        'table_data'  => $output,
        'total_data'  => $total_row

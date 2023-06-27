@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -131,6 +132,19 @@ class UserController extends Controller
         $output = '';
         $orderByAD = '';
         $orderBy = '';
+        $loc = Session::get("locale");
+            if($loc == 'ru'){
+                $NDF = 'Информации не найдено.';
+                $prof = "Открыть профиль";
+            } 
+            elseif($loc == 'en'){
+                $NDF = 'No Data Found.';
+                $prof = "View profile";
+            } 
+            else{
+                $NDF = 'Informācija nav atrasta.';
+                $prof = "Atvērt profilu";
+            } 
         $sortingParam = ''; //$request->get('sortValue');
         if($sortingParam != ''){
             if($sortingParam=='MembersAsc'){
@@ -147,21 +161,15 @@ class UserController extends Controller
             }
         }
         if($query != ''){
-            $data = DB::table('users')->where('username', 'like', '%'.$query.'%')->orWhere('id', 'like', '%'.$query.'%')->orderBy('id', 'ASC')->get();
+            $data = DB::table('users')
+                            ->where('username', 'like', '%'.$query.'%')
+                                ->orWhere('id', 'like', '%'.$query.'%')
+                                    ->orderBy('id', 'ASC')
+                                        ->get();
         }
-        else $data =  DB::table('users')->orderBy('id', 'ASC')->get(); 
-
-        // if($query != '' && $sortingParam != ''){
-        //     $data = DB::table('users')->where('username', 'like', '%'.$query.'%')->orderBy($orderBy, $orderByAD)->get();
-        //      //  ->orWhere('Address', 'like', '%'.$query.'%')
-        //    }
-        //    else if($orderByAD != ''){
-        //     $data = DB::table('guilds')->orderBy($orderBy, $orderByAD)->get();
-        //    }
-        //    else if($query != ''){
-        //      $data = DB::table('guilds')->where('name', 'like', '%'.$query.'%')->get();
-        //    }
-        //    else $data =  DB::table('guilds')->orderBy('id', 'desc')->get(); 
+        else $data = DB::table('users')
+                            ->orderBy('id', 'ASC')
+                                ->get(); 
       $total_row = $data->count();
       if($total_row > 0){
        foreach($data as $row){
@@ -172,13 +180,13 @@ class UserController extends Controller
          <td>'.$row->email.'</td>
          <td>'.$row->role.'</td>
          <td>
-         <a href="users/'.$row->id.'" class="btn btn-outline-light play_as">Press here to view</a>
+         <a href="users/'.$row->id.'" class="btn btn-outline-light play_as">'.$prof.'</a>
          </td>
         </tr>
         ';
        }
       }
-      else $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+      else $output = '<tr> <td align="center" colspan="5">'.$NDF.'</td> </tr> ';
       $data = array(
        'table_data'  => $output,
        'total_data'  => $total_row

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>Leaderboards</title>
+ <title>{{ __('Leaderboards') }}</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -40,7 +40,7 @@
 </head>
 <body>
 @include('layouts.partials.navbar')
- <h1>Leaderboards</h1>
+ <h1>{{ __('Leaderboards') }}</h1>
 <?php $user = Auth::user(); use App\Models\Character; use App\Models\Guild;?>
  @auth 
  <?php $character = Character::where('id', '=', $user->active_character_id)->first();?>
@@ -48,13 +48,13 @@
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Choose leaderboard:</div>
+    <div class="panel-heading">{{ __('Choose leaderboard') }}:</div>
     <div class="panel-body">
      <div class="form-group">
           <select id="sort">
-  <option value="actual value 1">Level</option>
-  <option value="actual value 2">Strength</option>
-  <option value="actual value 3">Duels</option>
+  <option value="actual value 1">{{ __('Level') }}</option>
+  <option value="actual value 2">{{ __('Strength') }}</option>
+  <option value="actual value 3">{{ __('Duels Won') }}</option>
 </select>
      </div>
      <div class="table-responsive">
@@ -62,13 +62,13 @@
       <table class="table table-striped table-bordered">
        <thead>
        <tr>
-       <th>Position</th>
-         <th>Name</th>
-         <th>Guild</th>
-         <th>Strength</th>
-         <th>Level</th>
-         <th>DuelsWon</th>
-         <th>Ask for a duel</th>
+       <th>{{ __('Position') }}</th>
+         <th>{{ __('Name') }}</th>
+         <th>{{ __('Guild') }}</th>
+         <th>{{ __('Strength') }}</th>
+         <th>{{ __('Level') }}</th>
+         <th>{{ __('Duels Won') }}</th>
+         <th>{{ __('Ask for a duel') }}</th>
         </tr>
        </thead>
        <tbody>
@@ -81,7 +81,7 @@
   <br>
   @auth
   @if($character)
-Your position: <b id="position"></b> 
+  {{ __('Your position') }}: <b id="position"></b> 
  @endif
  @endauth
  </div>
@@ -110,7 +110,7 @@ $(document).ready(function(){
  }
 
  $("#sort").change(function () {
-        sortValue = $("#sort :selected").text()
+        sortValue = $("#sort").prop('selectedIndex');
         fetch_character_data(sortValue);
     });
 });

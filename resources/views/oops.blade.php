@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Homepage</title>
+    <title>{{ __('Oops!') }}</title>
     <link href="{{ url('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
     <script>
@@ -12,11 +12,9 @@
 <body>
 
 @include('layouts.partials.navbar')
-<h1 align="center">Oops!
+<h1 align="center">{{ __('Oops!') }}
     <br>
-    Looks like something went wrong!
-<br>
-Maybe you tried to get somewhere you are not supposed to be? :D
+    {{ __('Looks like something went wrong!') }}
 </h1>
 
 </section>

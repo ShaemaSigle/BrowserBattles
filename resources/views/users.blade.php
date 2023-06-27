@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>User list</title>
+ <title>{{ __('Users List') }}</title>
  <link href="{!! url('assets/bootstrap/css/bootstrap.min.css') !!}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
 
@@ -40,17 +40,17 @@
 </head>
 <body>
 @include('layouts.partials.navbar')
- <h1>All of the users:</h1>
+ <h1>{{ __('All of the users') }}:</h1>
 
  @auth 
  @endauth
  <div class="profile-container">
 <div class="container-box">
    <div class="panel panel-default">
-    <div class="panel-heading">Search Users</div>
+    <div class="panel-heading">{{ __('Search') }}</div>
     <div class="panel-body">
      <div class="form-group">
-      <input type="text" name="search" id="search" class="form-control" placeholder="Username or id" />
+      <input type="text" name="search" id="search" class="form-control" placeholder="{{ __('What are you looking for?') }}" />
 
      </div>
      <div class="table-responsive">
@@ -59,10 +59,10 @@
        <thead>
         <tr>
         <th>ID</th>
-         <th>Username</th>
-         <th>Email</th>
-         <th>Role</th>
-         <th>Profile</th>
+         <th>{{ __('Username') }}</th>
+         <th>{{ __('Email') }}</th>
+         <th>{{ __('Role') }}</th>
+         <th>{{ __('Profile') }}</th>
         </tr>
        </thead>
        <tbody>
@@ -73,7 +73,7 @@
    </div>
   </div>
   <br>
- Total users: <b id="total_records"> </b>
+  {{ __('Total users') }}: <b id="total_records"> </b>
  </div>
 
 </body>
