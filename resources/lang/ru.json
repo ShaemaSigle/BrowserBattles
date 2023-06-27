@@ -6,7 +6,7 @@
       "Cancel": "Отмена",
       "Flag User": "Пометить пользователя",
       "Delete User": "Удалить пользователя",
-      "Enter reason for flagging": "Введите причину для пометки",
+      "Enter a reason for flagging": "Введите причину для пометки",
       "You have admin powers!": "У вас есть права администратора!",
       "You have moderator powers!": "У вас есть права модератора!",
 
@@ -110,5 +110,6 @@
 	  "All of the users": "Список пользователей",
 	  "Oops!":"Упс!",
 	  "Flag Character":"Пометить персонажа",
-	  "Looks like something went wrong!": "Что-то пошло не так!"
+	  "Looks like something went wrong!": "Что-то пошло не так!",
+  "Flag":"Отметить"
   }

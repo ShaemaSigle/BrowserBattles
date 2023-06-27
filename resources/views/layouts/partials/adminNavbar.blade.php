@@ -87,7 +87,7 @@
                 <button id="showButton" style="margin-left: 10px; margin-top:8px;" class="btn btn-outline-light li-right play_as">{{ __('Flag Guild') }}</button>
                 <form method="POST" id="flagging_form" class="blankit" action="{{ action([App\Http\Controllers\FlaggedObjectController::class, 'store'], ['guild' => $guild->id]) }}">
                     <input type="hidden" name="guild_id" id="guild_id" value="{{ $guild->id }}">
-                    <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter reason for flagging') }}">
+                    <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter a reason for flagging') }}">
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Flag Guild') }}</button>
@@ -107,7 +107,7 @@
                 <button id="showButton" style="margin-left: 10px; margin-top:8px;" class="btn btn-outline-light li-right play_as">{{ __('Flag User') }}</button>
                 <form method="POST" id="flagging_form" class="blankit" action="{{ action([App\Http\Controllers\FlaggedObjectController::class, 'store'], ['user' => $Wuser->id]) }}">
                     <input type="hidden" name="user_id" value="{{ $Wuser->id }}">
-                    <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter reason for flagging') }}">
+                    <input type="text" name="reason" style="width: 90%; height: 80%" placeholder="{{ __('Enter a reason for flagging') }}">
                     @csrf
                     @method('PUT')
                     <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Flag User') }}</button>

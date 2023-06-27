@@ -83,13 +83,20 @@
  <br>
 
 
+ @if($user->active_character_id == $character->id)
  <form method="POST" class="blankit" action={{action([App\Http\Controllers\EncounterController::class, 'store']) }}>
     <input type="hidden" name="active_character_id" id="active_character_id" value="{{ $character->id }}">
     @csrf
     @method('post')
     <button type="submit" class="btn btn-outline-light li-right play_as">{{ __('Find a random enemy') }}</button>
  </form>
-
+ @elseif($user->role == 'admin')
+ <form method="POST" class="blankit" action="{{action([App\Http\Controllers\CharacterController::class, 'destroy'],  $character->id) }}">
+    @csrf
+    @method('DELETE')
+    <button class="btn btn-outline-light li-right play_as" style="background-color: red;" type="submit" value="delete" onclick="return confirm('{{ addslashes(__('Delete character?')) }}')">{{ __('Delete') }}</button>
+  </form>
+@endif
 
   @endif
 @endauth

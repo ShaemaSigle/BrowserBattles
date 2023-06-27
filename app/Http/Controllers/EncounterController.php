@@ -74,23 +74,28 @@ class EncounterController extends Controller
      */
     public function update(Request $request)
     {
-        $encounter = Encounter::findOrFail($request->encounter);
-        if($request->result == "userLost") {
-            $encounter->result = "userLost";
-            $encounter->save();
-        }
-        if($encounter->result == NULL){
-            $character = Character::findOrFail($request->active_character_id);
-            $enemy_strength = (Enemy::findOrFail($encounter->enemy_id))->strength;
-            if($character->strength < $enemy_strength) $encounter->result = "userLost";
-            else{
+        if($request->ajax()){
+            $encounter = Encounter::findOrFail($request->get('encounter'));
+            $winner = $request->get('winner');
+            if($winner == 'player'){
                 $encounter->result = "userWon";
-                $character->strength = $character->strength + $enemy_strength;
+                $character = Character::findOrFail(Auth::user()->active_character_id);
+                $enemy = Enemy::findOrFail($encounter->enemy_id);
+                $character->strength = $character->strength + $enemy->strength;
                 if($character->strength / $character->level >= 1000) $character->level += 1;
                 $character->save();
-            } 
+            }
+            elseif($winner == 'enemy'){
+                $encounter->result = "userLost";
+            }
             $encounter->save();
+            return response()->json(['ok' => 'ok']);
         }
+        elseif($request->result == "userLost") {
+            $encounter = Encounter::findOrFail($request->encounter);
+            $encounter->result = "userLost";
+        }
+        $encounter->save();
         return view('encounter', ['encounter' => $encounter]);
         //return redirect('game');
     }

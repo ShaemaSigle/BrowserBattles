@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
+
 
 class UserController extends Controller
 {
@@ -93,7 +95,7 @@ class UserController extends Controller
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
                 ]);
                 if($validator->passes()){
-                    $imageName = time().'.'.$request->image->extension();
+                    if($user->profpic_path != NULL)File::delete(public_path('\assets\img').'/'.$user->profpic_path);
                     $request->image->move(public_path('\assets\img'), $request->image->getClientOriginalName());
                     $user->profpic_path=$request->image->getClientOriginalName();
                 }
@@ -127,11 +129,9 @@ class UserController extends Controller
 
     function search(Request $request){
     if($request->ajax()){
-        //dd("sorting"); НЕ ЮЗАЙ ЭТУ ХУЙНЮ, В ПРОШЛЫЙ РАЗ ПОЛЧАСА ЕБАЛАСЬ, ЧТОБЫ ПОНЯТЬ, ПОЧЕМУ ВСЁ ВДРУГ СЛОМАЛОСЬ
+        //dd() - Don't use this thing here for debug, breaks everything.
         $query = $request->get('searchValue');
         $output = '';
-        $orderByAD = '';
-        $orderBy = '';
         $loc = Session::get("locale");
             if($loc == 'ru'){
                 $NDF = 'Информации не найдено.';
@@ -145,21 +145,6 @@ class UserController extends Controller
                 $NDF = 'Informācija nav atrasta.';
                 $prof = "Atvērt profilu";
             } 
-        $sortingParam = ''; //$request->get('sortValue');
-        if($sortingParam != ''){
-            if($sortingParam=='MembersAsc'){
-                $orderByAD = 'ASC';
-                $orderBy = 'members_amount';
-           } 
-            if($sortingParam=='MembersDesc'){
-                $orderByAD= 'DESC';
-                $orderBy = 'members_amount';
-            }
-            if($sortingParam=='Alfabetically'){
-                $orderByAD= 'ASC';
-                $orderBy = 'name';
-            }
-        }
         if($query != ''){
             $data = DB::table('users')
                             ->where('username', 'like', '%'.$query.'%')

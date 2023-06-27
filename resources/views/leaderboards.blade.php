@@ -69,6 +69,9 @@
          <th>{{ __('Level') }}</th>
          <th>{{ __('Duels Won') }}</th>
          <th>{{ __('Ask for a duel') }}</th>
+         @can('index-users')
+         <th>{{ __('Owner') }}</th>
+         @endcan
         </tr>
        </thead>
        <tbody>

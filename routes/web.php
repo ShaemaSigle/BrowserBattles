@@ -21,7 +21,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
     Route::view('/leaderboards', 'leaderboards');
     Route::get('/leaderboards/live', [CharacterController::class,'live'])->name('live_search.action');
     Route::get('/', 'HomeController@index')->name('home.index');
-    
+
     Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class,'lang_change'])->name('lang.change');
     //Routes for guests only
     Route::group(['middleware' => ['guest']], function() {
@@ -37,6 +37,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         //Route::get('game', [GameController::class, 'index']);
         Route::get('game/{id}', [CharacterController::class, 'show']);
         Route::get('game/encounter/{id}', [EncounterController::class,'show']);
+        Route::post('game/encounter/{id}', [EncounterController::class,'update'])->name('encounter_update.action');
         Route::get('game/duel/{enemy_char_id}', [EncounterController::class,'duel']);
         Route::get('profile', [UserController::class,'show']);
         Route::get('guilds/create', [GuildController::class,'create']);

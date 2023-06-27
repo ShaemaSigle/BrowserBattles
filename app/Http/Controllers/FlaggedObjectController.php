@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 
 class FlaggedObjectController extends Controller
 {
@@ -81,6 +82,32 @@ class FlaggedObjectController extends Controller
 
     function search(Request $request){
         if($request->ajax()){
+            $loc = Session::get("locale");
+            if($loc == 'ru') {
+                $NDF = 'Информации не найдено.';
+                $dismiss = 'Отклонить';
+                $view = 'Взглянуть';
+                $char = 'Персонаж';
+                $guil = 'Гильдия';
+                $usr = 'Пользователь';
+            }
+            elseif($loc == 'en'){
+                $NDF = 'No Data Found.';
+                $dismiss = 'Dismiss';
+                $view = 'View';
+                $char = 'Character';
+                $guil = 'Guild';
+                $usr = 'User';
+            } 
+            else{
+                $NDF = 'Informācija nav atrasta.';
+                $dismiss = 'Noraidīt';
+                $view = 'Apskatīties';
+                $char = 'Varonis';
+                $guil = 'Gilde';
+                $usr = 'Lietotājs';
+            } 
+
             $output = '';
             $showCharacters = $request->get('showCharacters');
             $showUsers = $request->get('showUsers');
@@ -97,41 +124,41 @@ class FlaggedObjectController extends Controller
             if($dataWithCharacter->count() > 0){
                 foreach($dataWithCharacter as $row){
                     $address = 'game/'.$row->character_id;
-                    $type = 'Character';
+                    $type = $char;
                     $output .= '<tr>
                     <td>'.$type.'</td>
                     <td>'.$row->reason.'</td>
                     <td>'.$row->created_at.'</td>
-                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
-                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
+                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">'.$view.'</a></td>
+                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">'.$dismiss.'</a></td></tr>';
                 }
             }
             if($dataWithUser->count() > 0){
                 foreach($dataWithUser as $row){
                     $address = 'users/'.$row->user_id;
-                    $type = 'User';
+                    $type = $usr;
 
                     $output .= '<tr>
                     <td>'.$type.'</td>
                     <td>'.$row->reason.'</td>
                     <td>'.$row->created_at.'</td>
-                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
-                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
+                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">'.$view.'</a></td>
+                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">'.$dismiss.'</a></td></tr>';
                 }
             }
             if($dataWithGuild->count() > 0){
                 foreach($dataWithGuild as $row){
                     $address = $row->guild_id.'/guild';
-                    $type = 'Guild';
+                    $type = $guil;
                     $output .= '<tr>
                     <td>'.$type.'</td>
                     <td>'.$row->reason.'</td>
                     <td>'.$row->created_at.'</td>
-                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">View</a></td>
-                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">Dismiss</a></td></tr>';
+                    <td><a href="'.$address.'" class="btn btn-outline-light play_as">'.$view.'</a></td>
+                    <td><a href="/flagged/'.$row->id.'/delete" class="btn btn-outline-light play_as">'.$dismiss.'</a></td></tr>';
                 }
             }
-            if($showCharacters == 0 && $showUsers == 0 && $showGuilds == 0) $output = '<tr> <td align="center" colspan="5">No Data Found</td> </tr> ';
+            if($showCharacters == 0 && $showUsers == 0 && $showGuilds == 0) $output = '<tr> <td align="center" colspan="5">'.$NDF.'</td> </tr> ';
          $data = array('table_data'  => $output);
          echo json_encode($data);
         }

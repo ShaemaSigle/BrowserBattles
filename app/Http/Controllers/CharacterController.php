@@ -104,14 +104,17 @@ class CharacterController extends Controller
         if($loc == 'ru') {
             $NDF = 'Информации не найдено.';
             $duel = 'Вызвать на дуэль';
+            $ownr = 'Владелец игрока';
         }
         elseif($loc == 'en'){
             $NDF = 'No Data Found.';
-            $duel = 'Ask for a duel';
+            $duel = "Character's owner";
+            $ownr = 'Вызвать на дуэль';
         } 
         else{
             $NDF = 'Informācija nav atrasta.';
             $duel = 'Izaicināt uz dueli';
+            $ownr = 'Īpašnieks';
         } 
         if($request->ajax()){
             $output = '';
@@ -125,13 +128,15 @@ class CharacterController extends Controller
             }
             if($sortingParam != '') 
                 $data = DB::table('characters')
-                    ->join('guilds', 'characters.guild_id', '=', 'guilds.id')
-                        ->select('characters.name as character_name', 'characters.id as id', 'guilds.name as guild_name', 'characters.strength', 'characters.level', 'characters.duelsWon')
+                    ->leftJoin('guilds', 'characters.guild_id', '=', 'guilds.id')
+                        ->select('characters.name as character_name', 'characters.id as id', 'guilds.name as guild_name', 
+                        'characters.strength', 'characters.level', 'characters.duelsWon', 'characters.user_id')
                             ->orderBy($orderBy, $orderByAD)
                                 ->get();
             else $data =  DB::table('characters')
-                ->join('guilds', 'characters.guild_id', '=', 'guilds.id')
-                    ->select('characters.name as character_name', 'characters.id as id', 'guilds.name as guild_name', 'characters.strength', 'characters.level', 'characters.duelsWon')
+                ->leftJoin('guilds', 'characters.guild_id', '=', 'guilds.id')
+                    ->select('characters.name as character_name', 'characters.id as id', 'guilds.name as guild_name', 
+                    'characters.strength', 'characters.level', 'characters.duelsWon', 'characters.user_id')
                         ->orderBy('level', 'desc')
                             ->get(); 
 
@@ -146,7 +151,10 @@ class CharacterController extends Controller
                 <td>'.$row->strength.'</td>
                 <td>'.$row->level.'</td>
                 <td>'.$row->duelsWon.'</td>
-                <td><a href="/game/duel/'.$row->id.'" class="btn btn-outline-light play_as">'.$duel.'</a></td></tr>';
+                <td><a href="/game/duel/'.$row->id.'" class="btn btn-outline-light play_as">'.$duel.'</a></td>';
+                if(Gate::allows('index-users'))
+                $output .='<td><a href="/users/'.$row->user_id.'" class="btn btn-outline-light play_as">'.$ownr.'</a></td></tr>';
+                else $output .='</tr>';
                 if($mychar != NULL && $row->id == $mychar) $finpos = $counter;
                 $counter +=1;
             }
