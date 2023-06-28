@@ -33,6 +33,18 @@ class EncounterController extends Controller
         return view('encounter', ['enemy' => $enemy]);
     }
 
+    public function duel_won(Request $request)
+    {
+        if($request->ajax()){
+            $winner = $request->get('winner');
+            if($winner == 'player'){
+                $character = Character::findOrFail(Auth::user()->active_character_id); 
+                $character->duelsWon = $character->duelsWon + 1;
+                $character->save();
+            }            
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -75,6 +87,7 @@ class EncounterController extends Controller
     public function update(Request $request)
     {
         if($request->ajax()){
+            $newLVL = 'false';
             $encounter = Encounter::findOrFail($request->get('encounter'));
             $winner = $request->get('winner');
             if($winner == 'player'){
@@ -82,14 +95,20 @@ class EncounterController extends Controller
                 $character = Character::findOrFail(Auth::user()->active_character_id);
                 $enemy = Enemy::findOrFail($encounter->enemy_id);
                 $character->strength = $character->strength + $enemy->strength;
-                if($character->strength / $character->level >= 1000) $character->level += 1;
+                if($character->strength / $character->level >= 1000){
+                    $character->level += 1;
+                    $newLVL = 'true';
+                }
                 $character->save();
             }
             elseif($winner == 'enemy'){
                 $encounter->result = "userLost";
             }
             $encounter->save();
-            return response()->json(['ok' => 'ok']);
+            // return Json(new { data = XmlParms });
+            // echo json_encode($newLVL);
+            // return response()->json(['ok' => 'ok']);
+            return response()->json(['ok' => 'ok', 'newLVL' => $newLVL]);
         }
         elseif($request->result == "userLost") {
             $encounter = Encounter::findOrFail($request->encounter);

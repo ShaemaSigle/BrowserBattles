@@ -55,16 +55,12 @@ class CharacterController extends Controller
      * Display the specified resource.
      */
     public function show(Request $request){
-        //dd('yup');
         if($request->id == 0)  return view('game');
         $character = Character::findOrFail($request->id);
         //dd($character->name);
         if(Gate::allows('view-character', $character)) return view('game', ['character' => $character]);
         elseif(Auth::user()->active_character_id != NULL)return redirect('game/'.Auth::user()->active_character_id);
         else return redirect('game/0');
-        //else return view('game', ['character' => Character::findOrFail(Auth::user()->active_character_id)]);
-        // $characters = Character::where('user_id', '=', @auth()->user()->id)->first();
-        // return view('profile', ['characters' => $characters]);
     }
 
     /**
@@ -106,15 +102,15 @@ class CharacterController extends Controller
             $duel = 'Вызвать на дуэль';
             $ownr = 'Владелец игрока';
         }
-        elseif($loc == 'en'){
-            $NDF = 'No Data Found.';
-            $duel = "Character's owner";
-            $ownr = 'Вызвать на дуэль';
-        } 
-        else{
+        elseif($loc == 'lv'){
             $NDF = 'Informācija nav atrasta.';
             $duel = 'Izaicināt uz dueli';
             $ownr = 'Īpašnieks';
+        } 
+        else{
+            $NDF = 'No Data Found.';
+            $duel = "Ask for a duel";
+            $ownr = "Character's owner";
         } 
         if($request->ajax()){
             $output = '';

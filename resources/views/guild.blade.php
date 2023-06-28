@@ -66,6 +66,24 @@
     border-color: rgb(232, 229, 220);
     padding: 10px;
 }
+#flagging_forma {
+      position: fixed;
+      top: 54%;
+      left: 66%;
+      height: 27%;
+      width: 20%;
+      background-color: rgb(201, 168, 125);
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      border: 1px solid gray;
+}
+#input_field {
+    margin-top: -10px;
+    margin-left: -30px;
+    height:150px;
+    font-size:14pt;
+}
+
 </style>
 </head>
 <body>
@@ -110,7 +128,18 @@ use App\Http\Controllers\GuildController;
 <div class="subdescr">
 {{ __('Description') }}
    <div class="descr">
-    {{$guild->description}}
+    
+    
+    @can('delete-guild', $guild)
+ <form method="PosT" id="flagging_forma" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'update'], ['guild' => $guild->id]) }}>
+ <textarea rows="2" cols="25" type="text" style="background-color: rgb(201, 168, 125);" name="guild_description" id="input_field" value="{{ $guild->description }}">{{ $guild->description }}</textarea>
+ <input type="hidden" name="guild_id" value="{{ $guild->id }}">   
+ @csrf
+    @method('PuT')
+    <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Update') }}</button>
+ </form>
+ @else {{$guild->description}}
+ @endcan
    </div>
    {{ __('Owner') }}: {{$owner->name}}
 </div>

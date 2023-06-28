@@ -91,21 +91,21 @@ class FlaggedObjectController extends Controller
                 $guil = 'Гильдия';
                 $usr = 'Пользователь';
             }
-            elseif($loc == 'en'){
-                $NDF = 'No Data Found.';
-                $dismiss = 'Dismiss';
-                $view = 'View';
-                $char = 'Character';
-                $guil = 'Guild';
-                $usr = 'User';
-            } 
-            else{
+            elseif($loc == 'lv'){
                 $NDF = 'Informācija nav atrasta.';
                 $dismiss = 'Noraidīt';
                 $view = 'Apskatīties';
                 $char = 'Varonis';
                 $guil = 'Gilde';
                 $usr = 'Lietotājs';
+            } 
+            else{
+                $NDF = 'No Data Found.';
+                $dismiss = 'Dismiss';
+                $view = 'View';
+                $char = 'Character';
+                $guil = 'Guild';
+                $usr = 'User';
             } 
 
             $output = '';

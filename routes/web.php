@@ -39,10 +39,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::get('game/encounter/{id}', [EncounterController::class,'show']);
         Route::post('game/encounter/{id}', [EncounterController::class,'update'])->name('encounter_update.action');
         Route::get('game/duel/{enemy_char_id}', [EncounterController::class,'duel']);
+        Route::post('game/duel', [EncounterController::class,'duel_won'])->name('duel_update.action');;
         Route::get('profile', [UserController::class,'show']);
         Route::get('guilds/create', [GuildController::class,'create']);
         Route::get('characters/create', [CharacterController::class,'create']);
         Route::put('{id}/guild', [GuildController::class,'join']);
+        Route::put('{id}/guild/update', [GuildController::class,'update']);
         Route::put('{id}/guild/leave', [GuildController::class,'leave']);
         //Moderator and Admin Routes
         Route::put('flag', [FlaggedObjectController::class,'store'])->middleware('ensure.role:mod');

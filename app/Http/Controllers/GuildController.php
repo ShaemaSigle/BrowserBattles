@@ -99,9 +99,16 @@ class GuildController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $guild = Guild::findOrFail($request->guild_id);
+        if((Character::findOrFail(Auth::user()->active_character_id))->id == $guild->owner || Auth::user()->role == 'admin'){
+            if($request->guild_description != NULL){
+                $guild->description = $request->guild_description;
+                $guild->save();
+                return redirect($request->guild_id."/guild");
+            }
+        }
     }
 
     /**
@@ -199,15 +206,15 @@ class GuildController extends Controller
         $closed = 'Закрытая';
         $open = 'Открытая';
       }
-      elseif($loc == 'en'){
-        $NDF = 'No Data Found.';
-        $closed = 'Closed';
-        $open = 'Open';
-      } 
-      else{
+      elseif($loc == 'lv'){
         $NDF = 'Informācija nav atrasta.';
         $closed = 'Slēgta';
         $open = 'Atvērta';
+      } 
+      else{
+        $NDF = 'No Data Found.';
+        $closed = 'Closed';
+        $open = 'Open';
       } 
       if($total_row > 0){
        foreach($data as $row){

@@ -52,6 +52,7 @@
     <div class="panel-body">
      <div class="form-group">
       <input type="text" name="search" id="search" class="form-control" placeholder="{{ __('What are you looking for?') }}" />
+      <label for="sort">{{ __('Sort by') }}:</label>
       <select id="sort">
   <option value="actual value 1">{{ __('Members Ascending') }}</option>
   <option value="actual value 2">{{ __('Members Descending') }}</option>
