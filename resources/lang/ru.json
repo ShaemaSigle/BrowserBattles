@@ -106,10 +106,10 @@
 	  "Reason":"Причина",
 	  "Character": "Персонаж",
 	  "User": "Пользователь",
-	  "Guild":"Гильдия",
 	  "All of the users": "Список пользователей",
 	  "Oops!":"Упс!",
 	  "Flag Character":"Пометить персонажа",
 	  "Looks like something went wrong!": "Что-то пошло не так!",
-  "Flag":"Отметить"
+  "Flag":"Отметить",
+  "Register":"Зарегистрироваться"
   }

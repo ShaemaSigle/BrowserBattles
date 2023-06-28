@@ -15,7 +15,7 @@
   "Guilds": "Gildes",
   "English": "Angļu",
   "Russian": "Krievu",
-  "Leaderboards": "Līderejas",
+  "Leaderboards": "Līderi",
   "Latvian": "Latviešu",
   "Logout": "Iziet",
   "Login": "Ieiet",
@@ -96,10 +96,10 @@
   "Reason": "Iemesls",
   "Character": "Varonis",
   "User": "Lietotājs",
-  "Guild": "Gilde",
   "All of the users": "Visi lietotāji",
   "Oops!": "Atvainojiet!",
   "Flag Character": "Atzīmēt varoni",
-  "Looks like something went wrong!": "Izskatās, ka radās kļūda!"
+  "Looks like something went wrong!": "Izskatās, ka radās kļūda!",
+  "Register":"Piereģistrēties"
 
   }

@@ -79,8 +79,8 @@ p:not(blockquote p){
     background-color: rgb(255, 255, 255, 0.3);
 }
 .btn{
-    width: 100px;
     height: 36px;
+    width: fit-content;
 }
 
 
