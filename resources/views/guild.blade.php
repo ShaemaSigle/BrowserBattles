@@ -107,6 +107,12 @@ use App\Http\Controllers\GuildController;
      <div class="form-group">
       <input type="text" name="search" id="search" class="form-control" placeholder="{{ __('What are you looking for?') }}" />
      </div>
+     <label for="sort">{{ __('Sort by') }}:</label>
+      <select id="sort">
+  <option value="actual value 1">{{ __('Level') }}</option>
+  <option value="actual value 2">{{ __('Strength') }}</option>
+  <option value="actual value 3">{{ __('Duels Won') }}</option>
+</select>
      <div class="table-responsive">
       <!-- <h3 align="center">Total Data : <span id="total_records"></span></h3> -->
       <table class="table table-striped table-bordered">
@@ -116,6 +122,9 @@ use App\Http\Controllers\GuildController;
          <th>{{ __('Strength') }}</th>
          <th>{{ __('Level') }}</th>
          <th>{{ __('Duels Won') }}</th>
+         @can('update-guild', $guild)
+         <th>{{ __('Kick') }}</th>
+         @endcan
         </tr>
        </thead>
        <tbody>
@@ -126,8 +135,7 @@ use App\Http\Controllers\GuildController;
    </div>
 
 <div class="subdescr">
-{{ __('Description') }}
-   <div class="descr">
+<i  style="position: fixed; top: 38%; right:38%;">{{ __('Description') }}</i>
     
     
     @can('delete-guild', $guild)
@@ -138,9 +146,12 @@ use App\Http\Controllers\GuildController;
     @method('PuT')
     <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Update') }}</button>
  </form>
- @else {{$guild->description}}
+ @else<div class="subdescr">
+{{ __('Description') }}
+   <div class="descr"> {{$guild->description}}
+ 
  @endcan
-   </div>
+ <br><br><br> <br><br><br> <br><br><br>
    {{ __('Owner') }}: {{$owner->name}}
 </div>
 
@@ -154,7 +165,7 @@ use App\Http\Controllers\GuildController;
  </form>
  @endcan
  @endif
- <h1 class="flying">{{$guild->name}}</h1>
+ <h1 class="flying" >{{$guild->name}}</h1>
 
  @auth
  @if($user->active_character_id)
@@ -167,6 +178,7 @@ use App\Http\Controllers\GuildController;
  </form>
 @endcan
 
+@if($guild->isopen == "true")
 @can('join-guild')
  <form method="PosT" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'join'], ['id' => $guild->id]) }}>
     @csrf
@@ -174,7 +186,7 @@ use App\Http\Controllers\GuildController;
     <button type="submit" class="btn btn-outline-light li-right play_as">{{ __('Join guild') }}</button>
  </form>
  @endcan
-
+@endif
  @endif
  @endauth
 </div>
@@ -189,11 +201,11 @@ use App\Http\Controllers\GuildController;
 <script>
 $(document).ready(function(){
  fetch_character_data();
- function fetch_character_data(query = ''){
+ function fetch_character_data(query = '', sortValue=''){
   $.ajax({
    url:"{{ route('list_members.action', $guild->id) }}",
    method:'GET',
-   data:{query:query},
+   data:{query:query, sortValue:sortValue},
    dataType:'json',
    success:function(data){
     $('tbody').html(data.table_data);
@@ -201,10 +213,14 @@ $(document).ready(function(){
    }
   })
  }
-
+var query = ''; var sortValue = '';
  $(document).on('keyup', '#search', function(){
-  var query = $(this).val();
-  fetch_character_data(query);
+  query = $(this).val();
+  fetch_character_data(query, sortValue);
  });
+ $("#sort").change(function () {
+        sortValue = $("#sort").prop('selectedIndex');
+        fetch_character_data(query, sortValue);
+    });
 });
 </script>

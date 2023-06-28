@@ -46,7 +46,7 @@ class GuildController extends Controller
         $guild->members_amount=1;
         $guild->icon_path = 'D:\Progs\Wamp.NET\sites\pract.assign.dev\resources\images\snek.jpg';
         $guild->description = $request->guild_description;
-        $guild->isopen ='false';
+        $guild->isopen ='true';
         $owner = Character::where('id', '=', $request->guild_owner)->first();
         $guild->save();
         $owner->guild_id = $guild->id;
@@ -133,14 +133,41 @@ class GuildController extends Controller
         $guild = Guild::where('id', '=', $id)->first();
         if($request->ajax()){
             $output = '';
-            $query = $request->get('query');
-            if($query != '') $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->where('name', 'like', '%'.$query.'%')->get();
-            else $data = DB::table('characters')->where('guild_id', 'like', $guild->id)->orderBy('level', 'desc')->get();
-            $total_row = $data->count();
             $loc = Session::get("locale");
-            if($loc == 'ru') $NDF = 'Информации не найдено.';
-            elseif($loc == 'en') $NDF = 'No Data Found.';
-            else $NDF = 'Informācija nav atrasta.';
+            if($loc == 'ru') {
+                $kick = 'Изгнать';
+                $sure = 'Вы точно желаете изгнать этого игрока?';
+                $NDF = 'Информации не найдено.';
+            }
+            elseif($loc == 'lv'){
+                $kick = 'Izraidīt';
+                $sure = 'Vai tiešām vēlaties izraidīt šo spēlētāju?';
+                $NDF = 'Informācija nav atrasta.';
+            } 
+            else{
+                $kick = 'Kick out';
+                $sure = 'Are you sure you wish to kick this player out?';
+                $NDF = 'No Data Found.';
+            } 
+            $query = $request->get('query');
+            $sortingParam = $request->get('sortValue');
+            if($sortingParam != ''){
+               if($sortingParam=='0') $orderBy = 'level';
+               if($sortingParam=='1') $orderBy = 'strength';
+               if($sortingParam=='2') $orderBy = 'duelsWon';
+            }
+            else $orderBy = 'level';
+            if($query != '') 
+                $data = DB::table('characters')
+                    ->where('guild_id', 'like', $guild->id)
+                      ->where('name', 'like', '%'.$query.'%')
+                            ->orderBy($orderBy, 'desc')
+                                ->get();
+            else $data =  DB::table('characters')
+                            ->where('guild_id', 'like', $guild->id)
+                                ->orderBy($orderBy, 'desc')
+                                  ->get(); 
+            $total_row = $data->count();
             if($total_row > 0){
              foreach($data as $row){
               $output .= '
@@ -148,9 +175,10 @@ class GuildController extends Controller
                <td>'.$row->name.'</td>
                <td>'.$row->strength.'</td>
                <td>'.$row->level.'</td>
-               <td>'.$row->duelsWon.'</td>
-              </tr>
-              ';
+               <td>'.$row->duelsWon.'</td>';
+            if(Gate::allows('update-guild', $guild) && $row->id != $guild->owner)
+                    $output .='<td><a href="/characters/'.$row->id.'/kick" class="btn btn-outline-light play_as" onclick="return confirm(\'' . $sure . '\')">'.$kick.'</a></td></tr>';
+            else $output .="</tr>";
              }
             }
             else{
@@ -168,7 +196,6 @@ class GuildController extends Controller
 
     function action(Request $request){
      if($request->ajax()){
-        //dd("sorting"); НЕ ЮЗАЙ ЭТУ ХУЙНЮ, В ПРОШЛЫЙ РАЗ ПОЛЧАСА ЕБАЛАСЬ, ЧТОБЫ ПОНЯТЬ, ПОЧЕМУ ВСЁ ВДРУГ СЛОМАЛОСЬ
         $query = $request->get('searchValue');
         $output = '';
         $orderByAD = '';
@@ -190,7 +217,6 @@ class GuildController extends Controller
         }
         if($query != '' && $sortingParam != ''){
             $data = DB::table('guilds')->where('name', 'like', '%'.$query.'%')->orderBy($orderBy, $orderByAD)->get();
-             //  ->orWhere('Address', 'like', '%'.$query.'%')
            }
            else if($orderByAD != ''){
             $data = DB::table('guilds')->orderBy($orderBy, $orderByAD)->get();

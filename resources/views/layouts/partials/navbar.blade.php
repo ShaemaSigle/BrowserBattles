@@ -69,14 +69,14 @@
         @endauth
         <li><a href="{{action([App\Http\Controllers\GuildController::class, 'index'])}}" class="nav-link px-2 text-white">{{ __('Guilds') }}</a></li>
         <li><a href="/leaderboards" class="nav-link px-2 text-white">{{ __('Leaderboards') }}</a></li>
-          <li class="nav-link px-2 text-white">
+          <li class="nav-link px-2 text-white" style="margin-left: 250px;">
               <a href="{{route('lang.change','en')}}">{{ __('English') }}</a>
           </li>
           <li class="nav-link px-2 text-white">
-              <a href="{{route('lang.change','ru')}}">{{ __('Russian') }}</a>
+              <a href="{{route('lang.change','lv')}}">{{ __('Latvian') }}</a>
           </li>
           <li class="nav-link px-2 text-white">
-              <a href="{{route('lang.change','lv')}}">{{ __('Latvian') }}</a>
+              <a href="{{route('lang.change','ru')}}">{{ __('Russian') }}</a>
           </li>
       </ul>
   </div>

@@ -16,7 +16,7 @@ class GuildPolicy
         //
     }
     public function update(User $user, Guild $guild){
-        return $user->active_character_id === $guild->owner;
+        return $user->active_character_id == $guild->owner;
     }
     public function destroy(User $user, Guild $guild){
         return ($user->active_character_id == $guild->owner || $user->role=='admin');

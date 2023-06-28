@@ -43,6 +43,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
         Route::get('profile', [UserController::class,'show']);
         Route::get('guilds/create', [GuildController::class,'create']);
         Route::get('characters/create', [CharacterController::class,'create']);
+        Route::get('characters/{id}/kick', [CharacterController::class,'update']);
         Route::put('{id}/guild', [GuildController::class,'join']);
         Route::put('{id}/guild/update', [GuildController::class,'update']);
         Route::put('{id}/guild/leave', [GuildController::class,'leave']);

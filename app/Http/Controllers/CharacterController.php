@@ -76,7 +76,15 @@ class CharacterController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $characterToKick = Character::findOrFail($id);
+        $guild = Guild::Where('owner','=',Auth::user()->active_character_id)->first();
+        if($guild != NULL && $characterToKick->guild_id == $guild->id){
+            $characterToKick->guild_id = NULL;
+            $guild->members_amount -=1;
+            $characterToKick->save();
+            $guild->save();
+        }
+        return redirect($guild->id."/guild");
     }
 
     /**
