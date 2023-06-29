@@ -52,9 +52,9 @@
     width: 40vw;
 }
 .subdescr{
-    float: right;
-    margin-top: -30%;
-    margin-right: 15%;
+    position: fixed;
+    right: 550px;
+    top: 300px;
 }
 .descr{
     background-color: rgb(201, 168, 125, 0.8);
@@ -65,6 +65,8 @@
     border-radius: 10px;
     border-color: rgb(232, 229, 220);
     padding: 10px;
+
+    margin-right: -200px;
 }
 #flagging_forma {
       position: fixed;
@@ -72,10 +74,10 @@
       left: 66%;
       height: 27%;
       width: 20%;
-      background-color: rgb(201, 168, 125);
+      background-color: none;
       transform: translate(-50%, -50%);
       padding: 20px;
-      border: 1px solid gray;
+      border: none;
 }
 #input_field {
     margin-top: -10px;
@@ -83,7 +85,16 @@
     height:150px;
     font-size:14pt;
 }
-
+i{
+    position: fixed;
+    right: 550px;
+    top: 300px;
+}
+#name{
+    position: fixed;
+    right: 400px;
+    top: 200px;
+}
 </style>
 </head>
 <body>
@@ -97,6 +108,7 @@ use App\Http\Controllers\GuildController;
  $owner = Character::findOrFail($guild->owner);
 ?>
 <h1>{{ __('Guild') }}</h1>
+<h1 id="name">{{$guild->name}}</h1>
  <div class="profile-container">
  
  <div class="container-box">
@@ -135,9 +147,8 @@ use App\Http\Controllers\GuildController;
    </div>
 
 <div class="subdescr">
-<i  style="position: fixed; top: 38%; right:38%;">{{ __('Description') }}</i>
-    
-    
+<div class="descr" style="margin-right: -400px;"> 
+    <i style="margin-top: -20px;">{{ __('Description') }}</i>
     @can('delete-guild', $guild)
  <form method="PosT" id="flagging_forma" class="blankit" action={{action([App\Http\Controllers\GuildController::class, 'update'], ['guild' => $guild->id]) }}>
  <textarea rows="2" cols="25" type="text" style="background-color: rgb(201, 168, 125);" name="guild_description" id="input_field" value="{{ $guild->description }}">{{ $guild->description }}</textarea>
@@ -146,12 +157,12 @@ use App\Http\Controllers\GuildController;
     @method('PuT')
     <button type="submit" class="btn btn-outline-light li-right play_as" style="position: absolute; bottom: 10px; right: 10px;">{{ __('Update') }}</button>
  </form>
- @else<div class="subdescr">
-{{ __('Description') }}
-   <div class="descr"> {{$guild->description}}
+ @else
+
+   {{$guild->description}}
  
  @endcan
- <br><br><br> <br><br><br> <br><br><br>
+ </div>
    {{ __('Owner') }}: {{$owner->name}}
 </div>
 
@@ -165,7 +176,6 @@ use App\Http\Controllers\GuildController;
  </form>
  @endcan
  @endif
- <h1 class="flying" >{{$guild->name}}</h1>
 
  @auth
  @if($user->active_character_id)

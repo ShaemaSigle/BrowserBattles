@@ -6,6 +6,8 @@
     <title>{{ __('Home') }}</title>
     <link href="{{ url('assets/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/dogs.css') }}" type="text/css" rel="stylesheet"> 
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>
 window.addEventListener('scroll', function() {
   var distanceScrolled = window.pageYOffset || document.documentElement.scrollTop;
@@ -13,6 +15,11 @@ window.addEventListener('scroll', function() {
   banner.style.filter = 'blur(' + distanceScrolled / 60 + 'px)';
 });
 </script>
+<style>
+    h1{
+        background-color: darksalmon;
+    }
+</style>
 
 <?php  use Illuminate\Support\Facades\Session; ?>
  <?php $loc = Session::get("locale"); ?>
@@ -51,8 +58,14 @@ window.addEventListener('scroll', function() {
     <p>{{ __('Will you emerge as a legendary hero or succumb to the challenges that await you?') }}</p>
     <p>{{ __('Get ready to embark on an unforgettable journey where every encounter brings new excitement and surprises.') }}</p>
     <p>{{ __('The path to greatness awaits. Will you seize the opportunity?') }}</p>
+<h1 style="background: none;">{{ __('This is our strongest warrior. Will you be able to beat them?') }}</h1>
+<div id="strongest" style="margin-left: 40%;">
+<p id="pic"></p>
+<p id="name"><b>{{ __('Name') }}: </b></p>
+<p id="str"><b>{{ __('Strength') }}: </b></p>
+<p id="lvl"><b>{{ __('Level') }}: </b></p>
 
-
+</div>
 </article>
 
 <div id="copyright">Copyright 2023 - All rights reserved</div>
@@ -66,3 +79,26 @@ window.addEventListener('scroll', function() {
 @endif
 @endauth
 </html>
+<script>
+$(document).ready(function(){
+ fetch_character_data();
+ function fetch_character_data(){
+  $.ajax({
+    headers: {
+              'X-CSRF-TOKEN': $('meta[name=\"csrf-token\"]').attr('content')
+            },
+   url:"{{ route('strongest.action') }}",
+   method:'GET',
+   dataType:'json',
+   success:function(data){
+    var address = '<img src="https://pract.assign.dev/assets/img/' + data.profpic + '" height="200px" width="200px">';
+    $('#name').append(data.name);
+    $('#str').append(data.strength);
+    $('#lvl').append(data.lvl);
+    $('#pic').append(address);
+    
+   }
+  })
+ }
+});
+</script>

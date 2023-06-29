@@ -168,4 +168,25 @@ class CharacterController extends Controller
          echo json_encode($data);
         }
     }
+    function get_strongest(Request $request){
+
+        if($request->ajax()){
+            $data = DB::table('characters')
+             ->join('users', 'characters.user_id', '=', 'users.id')
+               ->select('characters.name as char_name', 'characters.strength', 'characters.level', 'users.profpic_path')
+                ->orderBy('strength', 'asc')
+                ->get();
+
+            if($data->count() > 0){
+                foreach($data as $row){
+                    $strength = $row->strength;
+                    $lvl = $row->level;
+                    $name = $row->char_name;
+                    $profpic = $row->profpic_path;
+                }
+            }
+         $dataSend = array('strength' => $strength, 'lvl'  => $lvl, 'name' => $name, 'profpic'  => $profpic);
+         echo json_encode($dataSend);
+        }
+    }
 }

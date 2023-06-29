@@ -21,6 +21,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function(){
     Route::view('/leaderboards', 'leaderboards');
     Route::get('/leaderboards/live', [CharacterController::class,'live'])->name('live_search.action');
     Route::get('/', 'HomeController@index')->name('home.index');
+    Route::get('strongest', [CharacterController::class, 'get_strongest'])->name('strongest.action');
 
     Route::get('/lang/{locale}', [\App\Http\Controllers\LocalizationController::class,'lang_change'])->name('lang.change');
     //Routes for guests only

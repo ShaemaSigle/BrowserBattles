@@ -86,13 +86,13 @@ class EncounterController extends Controller
      */
     public function update(Request $request)
     {
+        $character = Character::findOrFail(Auth::user()->active_character_id);
         if($request->ajax()){
             $newLVL = 'false';
             $encounter = Encounter::findOrFail($request->get('encounter'));
             $winner = $request->get('winner');
             if($winner == 'player'){
                 $encounter->result = "userWon";
-                $character = Character::findOrFail(Auth::user()->active_character_id);
                 $enemy = Enemy::findOrFail($encounter->enemy_id);
                 $character->strength = $character->strength + $enemy->strength;
                 if($character->strength / $character->level >= 1000){
@@ -105,9 +105,6 @@ class EncounterController extends Controller
                 $encounter->result = "userLost";
             }
             $encounter->save();
-            // return Json(new { data = XmlParms });
-            // echo json_encode($newLVL);
-            // return response()->json(['ok' => 'ok']);
             return response()->json(['ok' => 'ok', 'newLVL' => $newLVL]);
         }
         elseif($request->result == "userLost") {
@@ -115,8 +112,8 @@ class EncounterController extends Controller
             $encounter->result = "userLost";
         }
         $encounter->save();
-        return view('encounter', ['encounter' => $encounter]);
-        //return redirect('game');
+        //return view('encounter', ['encounter' => $encounter]);
+        return redirect('game/'.$character->id);
     }
 
     /**

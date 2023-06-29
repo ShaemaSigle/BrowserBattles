@@ -83,8 +83,8 @@
   @if($character && $character->guild_id==NULL)
  <a href="{{action([App\Http\Controllers\GuildController::class, 'create'])}}" class="btn btn-outline-light">{{ __('Create a guild') }}</a>
  @elseif ($character && $character->guild_id!=NULL)
- {{ __('Your guild') }}: <?php $guild = Guild::findOrFail($character->guild_id); ?>{{$guild->name}}
- <a href="{{$guild->id}}/guild" class="btn btn-outline-light play_as">{{ __('View') }}</a>
+ {{ __('Your guild') }}: <?php $myguild = Guild::findOrFail($character->guild_id); ?>{{$myguild->name}}
+ <a href="{{$myguild->id}}/guild" class="btn btn-outline-light play_as">{{ __('View') }}</a>
  @endif
  @endauth
  </div>

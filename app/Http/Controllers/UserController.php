@@ -137,13 +137,14 @@ class UserController extends Controller
                 $NDF = 'Информации не найдено.';
                 $prof = "Открыть профиль";
             } 
-            elseif($loc == 'en'){
-                $NDF = 'No Data Found.';
-                $prof = "View profile";
-            } 
-            else{
+            elseif($loc == 'lv'){
                 $NDF = 'Informācija nav atrasta.';
                 $prof = "Atvērt profilu";
+            } 
+            else{
+                $NDF = 'No Data Found.';
+                $prof = "View profile";
+                
             } 
         if($query != ''){
             $data = DB::table('users')
